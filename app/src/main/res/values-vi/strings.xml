@@ -108,7 +108,7 @@
     <string name="ui_105">"Đặt làm màn hình chính mặc định"</string>
     <string name="ui_106">"Dùng Pixel Air khi bạn về Home."</string>
     <string name="ui_107">"Mở trình chọn hình nền của máy."</string>
-    <string name="ui_108">"Pixel Air 0.12 · Tùy chọn được lưu trên thiết bị"</string>
+    <string name="ui_108">"Pixel Air 0.13 · Tùy chọn được lưu trên thiết bị"</string>
     <string name="ui_109">"Kích thước icon"</string>
     <string name="ui_110">"Áp dụng cho Home, dock và danh sách ứng dụng."</string>
     <string name="ui_111">"Nền danh sách ứng dụng"</string>
@@ -150,4 +150,6 @@
     <string name="drawer_section_description">%1$s, %2$d ứng dụng</string>
     <string name="drawer_jump_to">Đến nhóm %1$s</string>
     <string-array name="drawer_category_names"><item>Game</item><item>Công cụ</item><item>Công việc</item><item>Media</item><item>Liên lạc</item><item>Di chuyển</item><item>Đọc</item><item>Mua sắm</item><item>Khác</item></string-array>
+    <string name="drawer_expanded">Đã mở rộng</string>
+    <string name="drawer_collapsed">Đã thu gọn</string>
 </resources>

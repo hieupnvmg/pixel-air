@@ -1,4 +1,12 @@
-# Pixel Air 0.12
+# Pixel Air 0.13
+
+## Mới trong 0.13
+
+- Chạm tiêu đề nhóm để thu gọn/mở rộng, mặc định vẫn mở hết. Giữ tên, biểu tượng và số app khi thu gọn.
+- Ghi nhớ lựa chọn từng nhóm trên thiết bị, kể cả sau khi khởi động lại.
+- Chip tự mở nhóm đang thu gọn trước khi cuộn đến. Tìm kiếm vẫn lấy toàn bộ app, không thay đổi trạng thái đã lưu.
+- Mũi tên xoay, app xuất hiện nhẹ khi mở nhóm; bỏ hiệu ứng khi tắt animation hệ thống. Header có trạng thái mở/thu cho trình đọc màn hình.
+- Cài PixelAir-0.13.apk đè bản cũ để giữ dữ liệu.
 
 ## Mới trong 0.12
 

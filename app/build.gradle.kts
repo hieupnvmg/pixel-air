@@ -2,6 +2,6 @@ plugins { id("com.android.application") }
 android {
  namespace = "dev.pixelair.launcher"
  compileSdk { version = release(37) }
- defaultConfig { applicationId = "dev.pixelair.launcher"; minSdk = 33; targetSdk = 36; versionCode = 12; versionName = "0.12" }
+ defaultConfig { applicationId = "dev.pixelair.launcher"; minSdk = 33; targetSdk = 36; versionCode = 13; versionName = "0.13" }
  compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
 }

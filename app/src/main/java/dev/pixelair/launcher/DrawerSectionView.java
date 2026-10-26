@@ -7,10 +7,12 @@ import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
 
-/** Native, non-interactive section heading with a small category glyph and a quiet motif. */
+/** Native, expandable section heading with a small category glyph and a quiet motif. */
 final class DrawerSectionView extends LinearLayout {
     private final Glyph glyph, motif;
-    private final TextView title, count;
+    private final TextView title, count, chevron;
+    private String boundKey;
+    private boolean boundExpanded;
     private final Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
     private int accent;
     private int dp(float value) { return Math.round(value * getResources().getDisplayMetrics().density); }
@@ -46,13 +48,25 @@ final class DrawerSectionView extends LinearLayout {
         addView(count, new LayoutParams(-2, -2));
         motif = new Glyph(context, true);
         addView(motif, new LayoutParams(dp(28), dp(24)));
+        chevron = new TextView(context); chevron.setText("⌄"); chevron.setTextSize(20); chevron.setGravity(Gravity.CENTER);
+        addView(chevron, new LayoutParams(dp(24), dp(32)));
+        setBackground(new android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(0x18FFFFFF), null, new android.graphics.drawable.ColorDrawable(Color.WHITE)));
         for (int n = 0; n < getChildCount(); n++) getChildAt(n).setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
     }
-    void bind(String key, String name, int total) {
+    void bind(String key, String name, int total, boolean expandable, boolean expanded) {
         accent = accent(key); title.setText(name); title.setTextColor(accent);
         count.setText(String.valueOf(total)); count.setTextColor(accent);
         glyph.bind(key, accent); motif.bind(key, accent);
         setContentDescription(getResources().getString(R.string.drawer_section_description, name, total));
+        setClickable(expandable); setFocusable(expandable);
+        setStateDescription(expandable ? getResources().getString(expanded ? R.string.drawer_expanded : R.string.drawer_collapsed) : null);
+        chevron.setVisibility(expandable ? VISIBLE : GONE); chevron.setTextColor(accent);
+        float rotation = expanded ? 180 : 0;
+        chevron.animate().cancel();
+        if (expandable && key.equals(boundKey) && expanded != boundExpanded && android.animation.ValueAnimator.areAnimatorsEnabled())
+            chevron.animate().rotation(rotation).setDuration(180).start();
+        else chevron.setRotation(rotation);
+        boundKey=key; boundExpanded=expanded;
         invalidate();
     }
     @Override protected void dispatchDraw(Canvas canvas) {

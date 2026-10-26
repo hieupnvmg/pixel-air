@@ -1,4 +1,12 @@
-# Kiểm tra 0.12
+# Kiểm tra 0.13
+
+- assembleDebug và lintDebug qua trên JDK đi kèm Android Studio.
+- Máy ảo API 37: chạm Media thu/mở đúng các app, lưu lựa chọn và giữ sau khi dừng/khởi động lại tiến trình.
+- Chip Media tự mở nhóm đã thu rồi cuộn đến; tìm Photos trong nhóm đã thu vẫn có kết quả. Đóng tìm kiếm giữ trạng thái thu gọn.
+- Thu riêng nhóm Hay dùng và Công cụ không ảnh hưởng Media; chip tự mở Công cụ khi animation hệ thống tắt. Đã khôi phục cài đặt animation và mở lại các nhóm trên máy ảo.
+- Chữ ký APK hợp lệ. Không có AndroidRuntime exception trong các luồng thử. Chưa thử trên REDMAGIC thật.
+
+## Kiểm tra 0.12
 
 Kiểm tra bổ sung 0.12, máy ảo Android 17 / API 37:
 
