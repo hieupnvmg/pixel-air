@@ -1,10 +1,54 @@
-# Pixel Air
+<p align="center">
+  <img src="docs/assets/banner.svg" width="100%" alt="Pixel Air — Your Android. Your Home." />
+</p>
 
-A lightweight, experimental Android launcher inspired by Pixel-style Home screens, written in Java with native Android views. Originally built for a REDMAGIC 11 Air running Android 16.
+<p align="center">
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.11"><img alt="Version 0.11 preview" src="https://img.shields.io/badge/v0.11-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
+  <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
+</p>
 
-**Current version: 0.11 · Android 13+ · Apache License 2.0**
+<p align="center">A lightweight, experimental Android launcher. Native views, a familiar Home screen, and room to make it yours.</p>
 
-[Tiếng Việt](README.vi.md) · [Changelog](docs/CHANGELOG.vi.md) · [Testing notes](VALIDATION.md)
+<p align="center">
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.11">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
+</p>
+
+## A look inside
+
+<table>
+  <tr><th>Home</th><th>App drawer</th><th>Make it yours</th></tr>
+  <tr>
+    <td align="center"><img src="docs/assets/home.png" width="220" alt="Pixel Air Home screen with clock, app grid, dock and search" /></td>
+    <td align="center"><img src="docs/assets/drawer.png" width="220" alt="App drawer with frequent apps and app categories" /></td>
+    <td align="center"><img src="docs/assets/settings.png" width="220" alt="Launcher settings for icon packs, icon size and motion" /></td>
+  </tr>
+</table>
+
+Actual emulator captures from development builds. See the testing notes for device coverage.
+
+## Unlock, in one motion
+
+<table>
+  <tr>
+    <td width="270" align="center">
+      <picture>
+        <source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/home.png" />
+        <img src="docs/assets/unlock.gif" width="250" alt="Recorded unlock animation: the Home icon grid expands into place" />
+      </picture>
+    </td>
+    <td>
+      <h3>From wallpaper to your Home.</h3>
+      <p>The icon grid starts small and expands together into place, without showing the finished layout first.</p>
+      <ul>
+        <li>One entrance per unlock</li>
+        <li>Widgets and wallpaper stay still</li>
+        <li>Respects Android’s animation setting</li>
+      </ul>
+      <a href="https://github.com/hieupnvmg/pixel-air/releases/download/v0.11/PixelAir-0.11-unlock.mp4">Watch the full recording →</a>
+    </td>
+  </tr>
+</table>
 
 ## Features
 

@@ -1,8 +1,54 @@
-# Pixel Air
+<p align="center">
+  <img src="docs/assets/banner.svg" width="100%" alt="Pixel Air — Your Android. Your Home." />
+</p>
 
-Launcher Android thử nghiệm viết bằng Java/native Views, lấy cảm hứng từ giao diện Pixel. Hỗ trợ Android 13 trở lên; phiên bản hiện tại **0.11**.
+<p align="center">
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.11"><img alt="Version 0.11 preview" src="https://img.shields.io/badge/v0.11-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
+  <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
+</p>
 
-[English](README.md) · [Lịch sử thay đổi](docs/CHANGELOG.vi.md) · [Chi tiết kiểm tra](VALIDATION.md)
+<p align="center">Launcher Android gọn nhẹ, giao diện quen thuộc và nhiều tùy chọn để màn hình chính vừa ý bạn.</p>
+
+<p align="center">
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.11">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a>
+</p>
+
+## Một vòng giao diện
+
+<table>
+  <tr><th>Màn hình chính</th><th>Danh sách ứng dụng</th><th>Tùy chỉnh theo ý bạn</th></tr>
+  <tr>
+    <td align="center"><img src="docs/assets/home.png" width="220" alt="Pixel Air Home screen with clock, app grid, dock and search" /></td>
+    <td align="center"><img src="docs/assets/drawer.png" width="220" alt="App drawer with frequent apps and app categories" /></td>
+    <td align="center"><img src="docs/assets/settings.png" width="220" alt="Launcher settings for icon packs, icon size and motion" /></td>
+  </tr>
+</table>
+
+Ảnh giao diện thật từ các bản thử nghiệm trên máy ảo. Chi tiết thiết bị đã thử nằm trong ghi chú kiểm tra.
+
+## Mở khóa, bung icon liền mạch
+
+<table>
+  <tr>
+    <td width="270" align="center">
+      <picture>
+        <source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/home.png" />
+        <img src="docs/assets/unlock.gif" width="250" alt="Recorded unlock animation: the Home icon grid expands into place" />
+      </picture>
+    </td>
+    <td>
+      <h3>Từ hình nền đến màn hình chính.</h3>
+      <p>Lưới icon bắt đầu nhỏ rồi bung đồng bộ về vị trí, thay vì hiện đầy đủ trước rồi mới chạy lại.</p>
+      <ul>
+        <li>Một lần chuyển động cho mỗi lần mở khóa</li>
+        <li>Widget và hình nền đứng yên</li>
+        <li>Tôn trọng tùy chọn animation của Android</li>
+      </ul>
+      <a href="https://github.com/hieupnvmg/pixel-air/releases/download/v0.11/PixelAir-0.11-unlock.mp4">Xem video đầy đủ →</a>
+    </td>
+  </tr>
+</table>
 
 ## Tính năng
 
