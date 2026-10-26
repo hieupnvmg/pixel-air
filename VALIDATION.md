@@ -1,4 +1,17 @@
-# Kiểm tra 0.11
+# Kiểm tra 0.12
+
+Kiểm tra bổ sung 0.12, máy ảo Android 17 / API 37:
+
+- assembleDebug và lintDebug thành công; bộ kiểm tra model gồm 9 lớp qua.
+- DrawerSectionsTest: 8 app hay dùng, không trùng ID, nhóm 9 game/6 media hiện đủ nhiều hàng, nhóm rỗng bị bỏ, fallback loại lạ, vị trí header và chế độ ABC.
+- Kiểm tra UI thực tế: 8 app Hay dùng, chip Media cuộn đến app, All trở về đầu mà giữ nguyên các nhóm; tìm YouTube xuyên nhóm; đóng/mở khôi phục danh sách.
+- Chuyển ABC → Hay dùng + ABC → Hay dùng + loại thành công. Chạm Clock trên hàng tái sử dụng mở ứng dụng thật. Không có AndroidRuntime exception trong các luồng thử.
+- Đổi locale máy sang vi-VN: ô tìm kiếm, chip Tất cả và header Công cụ chuyển sang tiếng Việt; đã khôi phục locale gốc.
+- Chữ ký APK v2 hợp lệ.
+- Ảnh drawer trong README lấy từ APK 0.12 trên máy ảo, không phải ảnh concept.
+- Chưa đo FPS/độ trễ và chưa thử trên REDMAGIC Android 16 thật.
+
+## Kiểm tra 0.11
 
 Kiểm tra bổ sung 0.11, máy ảo API 37:
 

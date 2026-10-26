@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.11"><img alt="Version 0.11 preview" src="https://img.shields.io/badge/v0.11-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.12"><img alt="Version 0.12 preview" src="https://img.shields.io/badge/v0.12-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
   <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
   <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
 </p>
@@ -11,7 +11,7 @@
 <p align="center">A lightweight, experimental Android launcher. Native views, a familiar Home screen, and room to make it yours.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.11">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.12">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
 </p>
 
 ## A look inside
@@ -54,6 +54,7 @@ Actual emulator captures from development builds. See the testing notes for devi
 
 - Multiple Home pages, a shared dock, folders, drag-and-drop shortcuts, and edge dragging between pages.
 - Swipe-up app drawer with search, alphabetical sorting, or up to two rows of frequently launched apps followed by app categories.
+- Always-expanded category sections with themed accents and counts. Pinned category chips jump through the same complete list; no extra tap to reveal apps.
 - Editable app categories; automatic categories use Android metadata and package/name fallbacks.
 - Compatible installed icon packs using `appfilter.xml`, individual icon overrides, and adjustable icon sizes from 36–64 dp.
 - Dark or frosted-glass drawer backgrounds with adjustable opacity and system blur where available. Default: dark at 80% opacity, category sorting.
@@ -74,7 +75,7 @@ This is an early prototype, not the official Google Pixel Launcher. It does not 
 
 ## Download
 
-[Download the 0.11 prerelease APK](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.11). This is a debug-signed test build, not a Google Play release.
+[Download the 0.12 prerelease APK](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.12). This is a debug-signed test build, not a Google Play release.
 
 ## Build
 

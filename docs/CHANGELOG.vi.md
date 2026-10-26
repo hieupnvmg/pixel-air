@@ -1,4 +1,13 @@
-# Pixel Air 0.11
+# Pixel Air 0.12
+
+## Mới trong 0.12
+
+- Các nhóm app mở sẵn, hiện đầy đủ nhiều hàng trong cùng một danh sách cuộn.
+- Thanh tìm kiếm và chip nhóm cố định; bấm chip cuộn đến nhóm, không lọc hoặc ẩn app khác.
+- Header có biểu tượng, màu nhấn, số app và họa tiết theo chủ đề; nền nhóm nhẹ, không dùng thẻ lớn.
+- Giữ tối đa hai hàng Hay dùng, loại trùng khỏi nhóm phía dưới; giữ các chế độ ABC, tìm kiếm và nhấn giữ kéo app ra Home.
+- Tái sử dụng hàng danh sách và vẽ họa tiết tĩnh để tránh thêm animation khi cuộn. Tôn trọng tùy chọn tắt chuyển động của hệ thống.
+- Cài PixelAir-0.12.apk đè bản cũ để giữ dữ liệu.
 
 ## Mới trong 0.11
 
