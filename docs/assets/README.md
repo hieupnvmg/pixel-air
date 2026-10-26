@@ -15,3 +15,5 @@ The full recording is attached to the v0.11 GitHub release. Static screenshots a
 Third-party app icons and the emulator wallpaper appear as part of the captured Android UI; their respective owners retain rights to that artwork. They are not supplied as standalone launcher assets. See the repository's NOTICE file.
 
 `drawer-collapsed.png`: version 0.13 emulator capture with the Media group collapsed by tapping its header.
+
+`drawer-horizontal.png`: version 0.14 emulator capture of the optional horizontal drawer, Media page.

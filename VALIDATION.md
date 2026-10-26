@@ -1,4 +1,17 @@
-# Kiểm tra 0.13
+# Kiểm tra 0.14
+
+- assembleDebug, lintDebug và 10 lớp kiểm tra model qua. DrawerPagesTest bao phủ phân trang 37 game, biên nhóm, trang cuối, toàn bộ ID xuất hiện một lần, đổi dung lượng trang và chế độ ABC.
+- Máy ảo API 37: Settings lưu hướng Ngang; cài đè giữ mặc định Dọc. Dừng/khởi động lại vẫn giữ hướng đã chọn.
+- Trang đầu hiện đủ 8 app hay dùng; vuốt sang Công cụ rồi vuốt ngược trả về đúng trang; chip nhảy sang Media. Mở Clock từ trang ngang và trở lại drawer vẫn hiện đủ icon.
+- Tìm kiếm lấy app ở trang khác; mở lại drawer bắt đầu từ trang đầu. Vuốt xuống đóng drawer ngang.
+- Thu nhỏ vùng hiển thị thành 1080×1200: ABC có 20 app trên 5 trang; duyệt bằng nút Next kiểm tra 20 tên icon khác nhau, không thiếu hoặc trùng. Đã khôi phục kích thước máy ảo.
+- Đã sửa lỗi dựng trang trong layout callback bằng cách xếp việc tính lại trang sang lượt xử lý tiếp theo; kiểm tra trang đầu sau khởi động lạnh không trống.
+- Chuyển Dọc/Ngang giữ lựa chọn Media đang thu; ngang vẫn hiện Photos, quay lại dọc vẫn thu. Nhấn giữ app và Back không làm thay đổi bố cục Home.
+- Tiếng Việt trên drawer ngang và điều hướng khi tắt animation hệ thống qua; đã khôi phục locale, animation và chế độ Dọc trên máy ảo.
+- Chữ ký APK hợp lệ; không có AndroidRuntime exception trong các luồng thử.
+- Chưa đo FPS/độ trễ; chưa thử trên REDMAGIC Android 16 thật.
+
+## Kiểm tra 0.13
 
 - assembleDebug và lintDebug qua trên JDK đi kèm Android Studio.
 - Máy ảo API 37: chạm Media thu/mở đúng các app, lưu lựa chọn và giữ sau khi dừng/khởi động lại tiến trình.

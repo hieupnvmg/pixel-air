@@ -1,4 +1,13 @@
-# Pixel Air 0.13
+# Pixel Air 0.14
+
+## Mới trong 0.14
+
+- Thêm **Cài đặt → Danh sách ứng dụng → Hướng cuộn → Dọc / Ngang**, mặc định Dọc.
+- Ngang: mỗi nhóm có trang riêng, nhóm nhiều app chia thêm trang theo vùng hiển thị; vuốt bám ngón tay và chuyển trọn trang bằng cơ chế spring của Home.
+- Thanh tìm kiếm/chip cố định, chip nhảy đến trang đầu nhóm; chỉ báo trang và nút trước/sau hỗ trợ điều hướng.
+- Tìm kiếm lấy toàn bộ app, dùng danh sách kết quả chung. Chạm/nhấn giữ app vẫn mở hoặc kéo ra Home.
+- Không thu/mở nhóm trong chế độ ngang; giữ nguyên lựa chọn thu gọn cho chế độ dọc.
+- Cài PixelAir-0.14.apk đè bản cũ để giữ dữ liệu.
 
 ## Mới trong 0.13
 

@@ -84,6 +84,9 @@ public final class SettingsActivity extends Activity {
 
         section(getString(R.string.ui_090));
         LinearLayout apps = card();
+        choiceRow(apps,getString(R.string.drawer_scroll_title),getString(R.string.drawer_scroll_detail),"drawerOrientation",
+                new String[]{getString(R.string.drawer_vertical),getString(R.string.drawer_horizontal)},0);
+        divider(apps);
         addDrawerAppearance(apps);
         divider(apps);
         LinearLayout sort = labels(getString(R.string.ui_008), getString(R.string.ui_091)); apps.addView(sort);

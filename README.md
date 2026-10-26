@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.13"><img alt="Version 0.13 preview" src="https://img.shields.io/badge/v0.13-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.14"><img alt="Version 0.14 preview" src="https://img.shields.io/badge/v0.14-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
   <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
   <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
 </p>
@@ -11,7 +11,7 @@
 <p align="center">A lightweight, experimental Android launcher. Native views, a familiar Home screen, and room to make it yours.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.13">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.14">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
 </p>
 
 ## A look inside
@@ -54,6 +54,7 @@ Actual emulator captures from development builds. See the testing notes for devi
 
 - Multiple Home pages, a shared dock, folders, drag-and-drop shortcuts, and edge dragging between pages.
 - Swipe-up app drawer with search, alphabetical sorting, or up to two rows of frequently launched apps followed by app categories.
+- Optional horizontal drawer: **Settings → App drawer → Scroll direction → Horizontal**. Swipe between category pages; larger groups continue on additional pages. Search spans every page. Vertical remains the default.
 - Initially expanded, collapsible category sections with themed accents and counts. Tap a header to collapse or expand it; choices persist across restarts. Pinned chips open their group before jumping, and search includes collapsed apps.
 - Editable app categories; automatic categories use Android metadata and package/name fallbacks.
 - Compatible installed icon packs using `appfilter.xml`, individual icon overrides, and adjustable icon sizes from 36–64 dp.
@@ -75,7 +76,7 @@ This is an early prototype, not the official Google Pixel Launcher. It does not 
 
 ## Download
 
-[Download the 0.13 prerelease APK](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.13). This is a debug-signed test build, not a Google Play release.
+[Download the 0.14 prerelease APK](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.14). This is a debug-signed test build, not a Google Play release.
 
 ## Build
 
@@ -122,3 +123,5 @@ Run the build/lint checks and the model tests before submitting a change. Docume
 Pixel Air source code is available under the [Apache License 2.0](LICENSE). See [NOTICE](NOTICE) for third-party notices. Product names and third-party app logos belong to their respective owners.
 
 <p align="center"><img src="docs/assets/drawer-collapsed.png" width="220" alt="Media category collapsed; other app groups remain visible" /></p>
+
+<p align="center"><img src="docs/assets/drawer-horizontal.png" width="220" alt="Optional horizontal drawer with a Media page and page navigation" /></p>
