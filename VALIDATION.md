@@ -1,4 +1,11 @@
-# Kiểm tra 0.14
+# Kiểm tra 0.15
+
+- assembleDebug và lintDebug qua.
+- Kiểm tra ảnh mở/thu trên máy ảo API 37: chevron vẽ nét bo tròn, căn giữa trong nền tròn; không còn ký tự phụ thuộc font hoặc họa tiết cạnh nút.
+- Chạm tiêu đề Media thu đúng các app, chạm lại mở đầy đủ. Không có AndroidRuntime exception trong luồng thử.
+- Chưa thử trên REDMAGIC thật.
+
+## Kiểm tra 0.14
 
 - assembleDebug, lintDebug và 10 lớp kiểm tra model qua. DrawerPagesTest bao phủ phân trang 37 game, biên nhóm, trang cuối, toàn bộ ID xuất hiện một lần, đổi dung lượng trang và chế độ ABC.
 - Máy ảo API 37: Settings lưu hướng Ngang; cài đè giữ mặc định Dọc. Dừng/khởi động lại vẫn giữ hướng đã chọn.

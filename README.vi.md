@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.14"><img alt="Version 0.14 preview" src="https://img.shields.io/badge/v0.14-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.15"><img alt="Version 0.15 preview" src="https://img.shields.io/badge/v0.15-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
   <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
   <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
 </p>
@@ -11,7 +11,7 @@
 <p align="center">Launcher Android gọn nhẹ, giao diện quen thuộc và nhiều tùy chọn để màn hình chính vừa ý bạn.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.14">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.15">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a>
 </p>
 
 ## Một vòng giao diện
@@ -62,7 +62,7 @@
 
 ## Tải bản thử
 
-[Tải APK 0.14 trên GitHub Releases](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.14). Đây là bản debug để thử nghiệm.
+[Tải APK 0.15 trên GitHub Releases](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.15). Đây là bản debug để thử nghiệm.
 
 ## Build
 
@@ -97,7 +97,7 @@ Cài APK và đặt Pixel Air làm ứng dụng màn hình chính mặc định.
 
 Khi báo lỗi, vui lòng ghi model máy, phiên bản Android/ROM, phiên bản launcher và các bước tái hiện. Mã nguồn dùng giấy phép [Apache 2.0](LICENSE); đóng góp và pull request đều được chào đón.
 
-### App drawer 0.14
+### App drawer 0.15
 
 Các nhóm mặc định mở sẵn, có thể chạm tiêu đề để thu gọn hoặc mở rộng, hiện đầy đủ ứng dụng trong một danh sách cuộn. Launcher ghi nhớ trạng thái từng nhóm. Chip tự mở nhóm trước khi cuộn đến; tìm kiếm vẫn lấy app trong các nhóm đã thu gọn. Mỗi nhóm có biểu tượng, màu nhấn và số ứng dụng riêng; hai hàng Hay dùng không trùng app với các nhóm bên dưới.
 

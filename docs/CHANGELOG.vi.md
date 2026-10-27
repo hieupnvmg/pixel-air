@@ -1,4 +1,11 @@
-# Pixel Air 0.14
+# Pixel Air 0.15
+
+## Mới trong 0.15
+
+- Thay dấu thu/mở dạng ký tự bằng chevron vẽ nét bo tròn, căn giữa chuẩn và không phụ thuộc font.
+- Nền tròn màu nhẹ theo nhóm; thay vị trí họa tiết khi có nút thu/mở để header gọn hơn.
+- Xoay 220 ms với đường cong giảm tốc; giữ vùng chạm toàn tiêu đề và trạng thái hỗ trợ đọc màn hình. Tắt animation hệ thống không xoay.
+- Cài PixelAir-0.15.apk đè bản cũ để giữ dữ liệu.
 
 ## Mới trong 0.14
 

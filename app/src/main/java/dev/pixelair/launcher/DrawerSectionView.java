@@ -10,7 +10,8 @@ import android.widget.*;
 /** Native, expandable section heading with a small category glyph and a quiet motif. */
 final class DrawerSectionView extends LinearLayout {
     private final Glyph glyph, motif;
-    private final TextView title, count, chevron;
+    private final TextView title, count;
+    private final ExpandIndicator chevron;
     private String boundKey;
     private boolean boundExpanded;
     private final Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -48,8 +49,8 @@ final class DrawerSectionView extends LinearLayout {
         addView(count, new LayoutParams(-2, -2));
         motif = new Glyph(context, true);
         addView(motif, new LayoutParams(dp(28), dp(24)));
-        chevron = new TextView(context); chevron.setText("⌄"); chevron.setTextSize(20); chevron.setGravity(Gravity.CENTER);
-        addView(chevron, new LayoutParams(dp(24), dp(32)));
+        chevron = new ExpandIndicator(context);
+        addView(chevron, new LayoutParams(dp(40), dp(40)));
         setBackground(new android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(0x18FFFFFF), null, new android.graphics.drawable.ColorDrawable(Color.WHITE)));
         for (int n = 0; n < getChildCount(); n++) getChildAt(n).setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
     }
@@ -60,11 +61,12 @@ final class DrawerSectionView extends LinearLayout {
         setContentDescription(getResources().getString(R.string.drawer_section_description, name, total));
         setClickable(expandable); setFocusable(expandable);
         setStateDescription(expandable ? getResources().getString(expanded ? R.string.drawer_expanded : R.string.drawer_collapsed) : null);
-        chevron.setVisibility(expandable ? VISIBLE : GONE); chevron.setTextColor(accent);
+        chevron.setVisibility(expandable ? VISIBLE : GONE); chevron.bind(accent);
+        motif.setVisibility(expandable ? GONE : VISIBLE);
         float rotation = expanded ? 180 : 0;
         chevron.animate().cancel();
         if (expandable && key.equals(boundKey) && expanded != boundExpanded && android.animation.ValueAnimator.areAnimatorsEnabled())
-            chevron.animate().rotation(rotation).setDuration(180).start();
+            chevron.animate().rotation(rotation).setDuration(220).setInterpolator(new android.view.animation.PathInterpolator(.2f,0f,0f,1f)).start();
         else chevron.setRotation(rotation);
         boundKey=key; boundExpanded=expanded;
         invalidate();
@@ -77,6 +79,25 @@ final class DrawerSectionView extends LinearLayout {
             line.setColor((accent & 0x00FFFFFF) | 0x55000000); line.setStrokeWidth(dp(1));
             float y = glyph.getTop() + glyph.getHeight() / 2f;
             canvas.drawLine(start, y, end, y, line);
+        }
+    }
+    /** Font-independent, centered disclosure glyph; its circle replaces the decorative motif. */
+    private static final class ExpandIndicator extends View {
+        private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Path path = new Path();
+        private int color;
+        ExpandIndicator(Context context) { super(context); }
+        void bind(int value) { color=value; invalidate(); }
+        @Override protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+            float density=getResources().getDisplayMetrics().density;
+            float cx=getWidth()/2f, cy=getHeight()/2f;
+            paint.setStyle(Paint.Style.FILL);paint.setColor((color & 0x00FFFFFF) | 0x14000000);
+            canvas.drawCircle(cx,cy,14*density,paint);
+            paint.setStyle(Paint.Style.STROKE);paint.setStrokeWidth(1.7f*density);
+            paint.setStrokeCap(Paint.Cap.ROUND);paint.setStrokeJoin(Paint.Join.ROUND);paint.setColor(color);
+            path.rewind();path.moveTo(cx-4*density,cy-2*density);path.lineTo(cx,cy+2*density);path.lineTo(cx+4*density,cy-2*density);
+            canvas.drawPath(path,paint);
         }
     }
     /** A barely tinted horizontal wash: no enclosing cards or rounded category tiles. */
