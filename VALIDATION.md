@@ -1,4 +1,12 @@
-# Kiểm tra 0.17
+# Kiểm tra 0.18
+
+- assembleDebug và lintDebug qua.
+- Máy giả lập API 37, ảnh trước/sau cùng wallpaper và kích thước 1080×2400: tại x=8, bước nhảy kênh RGB qua mép status bar (y=63) giảm từ 19 xuống 0; qua mép navigation bar (y=2337) giảm từ 8 xuống 0.
+- Bounds của Chrome, Camera và Google Lens trước/sau không đổi. Insets nội dung giữ nguyên.
+- Mở/đóng drawer qua kiểm tra UI; các pixel mẫu từ đầu đến cuối mép màn hình trở về đúng màu Home sau khi đóng. Không có AndroidRuntime exception.
+- Chưa xác nhận trên REDMAGIC thật. Vấn đề thẻ Pixel Air trong đa nhiệm trên REDMAGIC vẫn chưa được xác nhận sửa xong; bản này tập trung vào nền Home.
+
+## Kiểm tra 0.17
 
 - assembleDebug và lintDebug qua. Không còn source/callback/tùy chọn HomeReturn; kiểm tra DEX không có HomeReturnAnimator hoặc HomeReturnGate.
 - Máy giả lập API 37: mở Chrome, trở về Home không phát PixelAirReturn. Mở đa nhiệm từ Home và từ Chrome đều chỉ thấy Chrome; Home tiếp tục mở bình thường, không có AndroidRuntime exception.

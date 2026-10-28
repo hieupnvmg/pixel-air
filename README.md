@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.17"><img alt="Version 0.17 preview" src="https://img.shields.io/badge/v0.17-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18"><img alt="Version 0.18 preview" src="https://img.shields.io/badge/v0.18-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
   <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
   <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
 </p>
@@ -11,7 +11,7 @@
 <p align="center">A lightweight, experimental Android launcher. Native views, a familiar Home screen, and room to make it yours.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.17">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
 </p>
 
 ## A look inside
@@ -76,7 +76,7 @@ This is an early prototype, not the official Google Pixel Launcher. It does not 
 
 ## Download
 
-[Download the 0.17 prerelease APK](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.17). This is a debug-signed test build, not a Google Play release.
+[Download the 0.18 prerelease APK](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18). This is a debug-signed test build, not a Google Play release.
 
 ## Build
 

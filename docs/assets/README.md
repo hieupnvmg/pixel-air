@@ -5,7 +5,7 @@ These files show the actual launcher, not design mockups.
 | Asset | Source |
 | --- | --- |
 | `banner.svg` | Original vector banner using the project's own icon and colors. |
-| `home.png` | Final Home frame from the version 0.11 emulator recording. |
+| `home.png` | Version 0.18 emulator Home capture with a continuous full-window background behind both system bars. |
 | `drawer.png` | English app drawer capture from version 0.15, showing the redesigned expand indicators. |
 | `settings.png` | English settings capture from version 0.10; the shown controls remain available in 0.11. |
 | `unlock.gif` | Shortened loop from the version 0.11 emulator recording, resized and palette-optimized for the README. Playback speed is unchanged; the first and final frames are held briefly for the loop. |

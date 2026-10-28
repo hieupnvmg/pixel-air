@@ -1,4 +1,11 @@
-# Pixel Air 0.17
+# Pixel Air 0.18
+
+## Mới trong 0.18
+
+- Sửa hai dải lệch màu ở status bar và thanh điều hướng trên màn hình chính: gradient Home phủ toàn bộ cửa sổ, còn nội dung vẫn giữ insets như trước.
+- Tắt lớp làm tối tăng tương phản tự động của system bars trong cửa sổ Home.
+- Lớp gradient Home mờ theo tiến độ mở drawer và trở lại đầy đủ khi đóng; không đổi vị trí icon, widget hoặc search.
+- Cài PixelAir-0.18.apk đè bản cũ để giữ dữ liệu.
 
 ## Mới trong 0.17
 
