@@ -1,4 +1,13 @@
-# Kiểm tra 0.18
+# Kiểm tra 0.19
+
+- assembleDebug, lintDebug và 11 lớp kiểm tra model qua. UnlockMotionTest: lưới bắt đầu lớn và thu vào, dock nhỏ đi lên, alpha giới hạn, hình học hội tụ và trở lại đúng trạng thái cuối.
+- UI Settings: mặc định Hiện tại khi nâng cấp, chọn Kiểu iPhone lưu unlockStyle=1, Xem thử đóng Settings và phát style=1 đúng một lần. Đổi lại Hiện tại phát style=0.
+- Máy giả lập API 37: chu kỳ Sleep/Wake thật và keyguard không PIN phát style=1 đúng một lần khi đóng keyguard. Ghi hình màn hình 540×1200; các frame chuyển tiếp cho thấy icon bắt đầu lớn rồi về vị trí, dock hiện từ dưới; không thấy trạng thái icon đầy đủ rồi mới khởi động lại animation trong lần ghi thử.
+- Tắt công tắc mở khóa hoặc animation hệ thống: không phát và icon cuối vẫn hiện. Mở Chrome rồi quay lại Home không phát hiệu ứng mở khóa.
+- Kiểu đã chọn giữ sau force-stop/khởi động lại. Không có AndroidRuntime exception. Đã khôi phục cài đặt keyguard và animation của máy giả lập.
+- Video PixelAir-0.19-unlock.mp4 là quay máy giả lập chạy app thật, không dùng clip iPhone làm tài nguyên. Chuyển cảnh màn khóa thuộc hệ thống; chưa xác nhận độ khớp/cảm giác trên REDMAGIC thật.
+
+## Kiểm tra 0.18
 
 - assembleDebug và lintDebug qua.
 - Máy giả lập API 37, ảnh trước/sau cùng wallpaper và kích thước 1080×2400: tại x=8, bước nhảy kênh RGB qua mép status bar (y=63) giảm từ 19 xuống 0; qua mép navigation bar (y=2337) giảm từ 8 xuống 0.

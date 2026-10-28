@@ -1,4 +1,12 @@
-# Pixel Air 0.18
+# Pixel Air 0.19
+
+## Mới trong 0.19
+
+- Thêm lựa chọn kiểu mở khóa **Hiện tại / Kiểu iPhone** trong Cử chỉ & chuyển động; giữ mặc định Hiện tại.
+- Kiểu iPhone: lưới icon bắt đầu phóng lớn rồi thu về vị trí, dock bắt đầu nhỏ và hiện từ dưới; animation 600 ms, chỉ biến đổi icon trên Home.
+- Thêm nút **Xem thử hiệu ứng mở khóa**, mở Home và chạy kiểu đã chọn mà không cần khóa máy.
+- Tiếp tục chuẩn bị icon ẩn sau keyguard và bắt đầu ở OnPreDraw; tôn trọng công tắc mở khóa và tắt animation hệ thống. Chạm/rời Home hủy và khôi phục icon.
+- Cài PixelAir-0.19.apk đè bản cũ để giữ dữ liệu.
 
 ## Mới trong 0.18
 

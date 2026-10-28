@@ -19,6 +19,7 @@ fi
     app/src/main/java/dev/pixelair/launcher/IconPackMapping.java \
     app/src/main/java/dev/pixelair/launcher/AppCategories.java \
     app/src/main/java/dev/pixelair/launcher/WidgetGeometry.java \
+    app/src/main/java/dev/pixelair/launcher/UnlockMotion.java \
     app/src/main/java/dev/pixelair/launcher/UnlockGate.java \
     app/src/main/java/dev/pixelair/launcher/DrawerPages.java \
     app/src/main/java/dev/pixelair/launcher/DrawerSections.java \
@@ -28,3 +29,5 @@ for test in WorkspaceStateTest SwipePhysicsTest AppRankingTest SpringMotionTest 
 done
 
 "$JAVA" -cp "$TEST_OUTPUT_DIR" DrawerPagesTest
+
+"$JAVA" -ea -cp "$TEST_OUTPUT_DIR" UnlockMotionTest

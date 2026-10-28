@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18"><img alt="Version 0.18 preview" src="https://img.shields.io/badge/v0.18-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.19"><img alt="Version 0.19 preview" src="https://img.shields.io/badge/v0.19-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
   <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
   <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
 </p>
@@ -11,7 +11,7 @@
 <p align="center">Launcher Android gọn nhẹ, giao diện quen thuộc và nhiều tùy chọn để màn hình chính vừa ý bạn.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.19">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a>
 </p>
 
 ## Một vòng giao diện
@@ -62,7 +62,7 @@
 
 ## Tải bản thử
 
-[Tải APK 0.18 trên GitHub Releases](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18). Đây là bản debug để thử nghiệm.
+[Tải APK 0.19 trên GitHub Releases](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.19). Đây là bản debug để thử nghiệm.
 
 ## Build
 
@@ -112,3 +112,9 @@ Vào **Cài đặt Pixel Air → Danh sách ứng dụng → Hướng cuộn →
 ### Trở về Home và đa nhiệm
 
 Bản 0.17 bỏ hoàn toàn hiệu ứng trở về Home được thêm ở 0.16 vì người dùng báo phản hồi chậm. Chỉnh cách tách task của Home theo Launcher3 và chuyển cập nhật task cũ ra khỏi luồng UI. Máy giả lập không hiện thẻ Pixel Air trong đa nhiệm, nhưng lỗi trên REDMAGIC khi vuốt từ Home vẫn cần kiểm chứng thực tế; không coi đây là lỗi đã xác nhận sửa xong.
+
+### Kiểu mở khóa iPhone tùy chọn
+
+Vào **Cài đặt → Cử chỉ & chuyển động → Kiểu hiệu ứng mở khóa → Kiểu iPhone**, rồi bấm **Xem thử hiệu ứng mở khóa**. Lưới icon lớn thu về vị trí, dock hiện từ dưới trong khoảng 600 ms; kiểu hiện tại vẫn là mặc định. Tham khảo [clip người dùng gửi](https://www.youtube.com/shorts/ncvc6Vi0CFo), không phải chuyển cảnh màn khóa hệ thống iOS.
+
+[Xem video kiểu mở khóa iPhone trên máy giả lập](https://github.com/hieupnvmg/pixel-air/releases/download/v0.19/PixelAir-0.19-unlock.mp4). Đây là quay app thật; chuyển cảnh màn khóa vẫn do hệ thống quản lý.

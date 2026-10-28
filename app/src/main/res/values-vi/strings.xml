@@ -108,7 +108,7 @@
     <string name="ui_105">"Đặt làm màn hình chính mặc định"</string>
     <string name="ui_106">"Dùng Pixel Air khi bạn về Home."</string>
     <string name="ui_107">"Mở trình chọn hình nền của máy."</string>
-    <string name="ui_108">"Pixel Air 0.18 · Tùy chọn được lưu trên thiết bị"</string>
+    <string name="ui_108">"Pixel Air 0.19 · Tùy chọn được lưu trên thiết bị"</string>
     <string name="ui_109">"Kích thước icon"</string>
     <string name="ui_110">"Áp dụng cho Home, dock và danh sách ứng dụng."</string>
     <string name="ui_111">"Nền danh sách ứng dụng"</string>
@@ -160,4 +160,11 @@
     <string name="drawer_next_page">Trang ứng dụng tiếp</string>
     <string name="drawer_page_label">%1$s %2$d/%3$d · %4$d/%5$d</string>
     <string name="drawer_page_accessibility">%1$s, trang nhóm %2$d trên %3$d, trang ứng dụng %4$d trên %5$d</string>
+    <string name="unlock_style_title">Kiểu hiệu ứng mở khóa</string>
+    <string name="unlock_style_detail">Hiện tại: bung nhẹ. Kiểu iPhone: lưới icon lớn thu về vị trí, dock hiện từ dưới.</string>
+    <string name="unlock_style_current">Hiện tại</string>
+    <string name="unlock_style_iphone">Kiểu iPhone</string>
+    <string name="unlock_preview_title">Xem thử hiệu ứng mở khóa</string>
+    <string name="unlock_preview_detail">Trở về Home để xem kiểu đã chọn mà không cần khóa máy.</string>
+    <string name="unlock_preview_unavailable">Bật hiệu ứng mở khóa và animation hệ thống để xem thử.</string>
 </resources>
