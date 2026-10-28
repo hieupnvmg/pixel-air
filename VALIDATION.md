@@ -1,3 +1,12 @@
+# Kiểm tra rollback 0.18.1
+
+- Java source, manifest, styles, model tests và scripts khôi phục từ v0.18. Chỉ khác versionCode/versionName và chuỗi hiển thị phiên bản trong app.
+- Đối chiếu từng file app với tag v0.18: trùng hoàn toàn sau khi chuẩn hóa ba trường/chuỗi version metadata; scripts/tests trùng tag.
+- assembleDebug, lintDebug và 10 lớp kiểm tra model qua. Chữ ký APK hợp lệ và cùng certificate với APK 0.21.
+- Không cần gỡ app; versionCode 22 lớn hơn bản 0.21 (21).
+
+Lịch sử kiểm tra trước rollback:
+
 # Kiểm tra 0.21
 
 - assembleDebug, lintDebug và 10 lớp kiểm tra model qua. UnlockGateTest mở rộng: Home đã hiển thị, callback keyguard/USER_PRESENT lặp hoặc đến trễ, SCREEN_OFF lỗi thời khi đã bật, chờ focus, expiry, chu kỳ khóa mới và Xem thử rõ ràng.

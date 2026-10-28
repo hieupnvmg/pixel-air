@@ -108,7 +108,7 @@
     <string name="ui_105">"Set as default Home app"</string>
     <string name="ui_106">"Use Pixel Air when you go Home."</string>
     <string name="ui_107">"Open the system wallpaper picker."</string>
-    <string name="ui_108">"Pixel Air 0.21 · Preferences are saved on this device"</string>
+    <string name="ui_108">"Pixel Air 0.18.1 · Preferences are saved on this device"</string>
     <string name="ui_109">"Icon size"</string>
     <string name="ui_110">"Applies to Home, dock and app drawer."</string>
     <string name="ui_111">"App drawer background"</string>
@@ -160,11 +160,4 @@
     <string name="drawer_next_page">Next app page</string>
     <string name="drawer_page_label">%1$s %2$d/%3$d · %4$d/%5$d</string>
     <string name="drawer_page_accessibility">%1$s, group page %2$d of %3$d, app page %4$d of %5$d</string>
-    <string name="unlock_style_title">Unlock animation style</string>
-    <string name="unlock_style_detail">Current: expand into place. iPhone: enlarged grid settles in while the dock rises.</string>
-    <string name="unlock_style_current">Current</string>
-    <string name="unlock_style_iphone">iPhone style</string>
-    <string name="unlock_preview_title">Preview unlock animation</string>
-    <string name="unlock_preview_detail">Return to Home to try the selected style without locking.</string>
-    <string name="unlock_preview_unavailable">Enable unlock animation and system animations to preview.</string>
 </resources>

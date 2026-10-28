@@ -1,3 +1,11 @@
+# Pixel Air 0.18.1 — Rollback về 0.18
+
+- Khôi phục source theo tag v0.18, commit 58cd94f. Bỏ các thay đổi từ 0.19 đến 0.21.
+- Chỉ tăng versionCode lên 22 và đổi nhãn thành 0.18.1 để Android cho phép cài đè các bản đã thử, giữ dữ liệu và bố cục.
+- Kiểu mở khóa iPhone, nút Xem thử và các thay đổi staging/cache sau 0.18 được gỡ bỏ. Hành vi trở lại bản 0.18.
+
+Lịch sử các bản thử trước rollback:
+
 # Pixel Air 0.21
 
 ## Mới trong 0.21
