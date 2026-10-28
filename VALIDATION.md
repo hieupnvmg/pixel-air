@@ -1,4 +1,14 @@
-# Kiểm tra 0.15
+# Kiểm tra 0.16
+
+- assembleDebug, lintDebug và 11 lớp kiểm tra model qua. HomeReturnGateTest kiểm tra rời Home thực sự, chờ focus, một lần mỗi lượt, hết hạn 3 phút, hủy khi khóa và thay app gợi ý.
+- Máy ảo API 37, Pixel Air làm Home mặc định: mở Clock từ drawer rồi bấm Home phát một lần, không tìm icon ở trang khác. Mở Chrome từ Home rồi trở về phát một lần với icon=true; bấm Home tiếp không lặp.
+- Recents UI sau Clock/Chrome hiển thị đúng app đó, không có thẻ Pixel Air. Task Home có FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS (intent flags 0x10800100); code cập nhật các AppTask thuộc launcher trên resume, không xóa task hoặc dữ liệu của app khác.
+- Tắt công tắc riêng và tắt animation Android đều không phát hiệu ứng. Khóa màn hình khi app đang mở xóa lượt chờ; trở lại Home không phát hiệu ứng cũ. Không có AndroidRuntime exception. Đã bật lại công tắc và animation 1× trên máy ảo.
+- Chữ ký APK hợp lệ.
+- Bản này không điều khiển cửa sổ app hoặc quỹ đạo vuốt về icon; chỉ có chuyển động nhẹ trên nội dung Home.
+- Chưa đo FPS/độ trễ, chưa thử trực tiếp trên REDMAGIC Android 16.
+
+## Kiểm tra 0.15
 
 - assembleDebug và lintDebug qua.
 - Kiểm tra ảnh mở/thu trên máy ảo API 37: chevron vẽ nét bo tròn, căn giữa trong nền tròn; không còn ký tự phụ thuộc font hoặc họa tiết cạnh nút.

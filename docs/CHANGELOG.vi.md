@@ -1,4 +1,12 @@
-# Pixel Air 0.15
+# Pixel Air 0.16
+
+## Mới trong 0.16
+
+- Loại Home/Settings task của Pixel Air khỏi danh sách gần đây. Cập nhật cờ task đang tồn tại khi trở lại launcher để áp dụng cho bản nâng cấp.
+- Thử hiệu ứng trở về Home không root: workspace ổn định nhẹ trong 260 ms, icon vừa mở app phản hồi nếu còn trên trang hiện tại hoặc dock. Không tự chuyển trang để tìm icon.
+- Thêm công tắc **Cử chỉ & chuyển động → Chuyển động khi trở về Home**. Chỉ chạy một lần sau app mở từ Pixel Air đã rời Home; bỏ qua khởi động lạnh, dialog, lúc khóa màn hình, tắt animation và dữ liệu gợi ý quá 3 phút.
+- Đây là animation trên Home, không điều khiển cửa sổ app nhập vào icon như launcher hệ thống.
+- Cài PixelAir-0.16.apk đè bản cũ để giữ dữ liệu.
 
 ## Mới trong 0.15
 

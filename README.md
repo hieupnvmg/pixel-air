@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.15"><img alt="Version 0.15 preview" src="https://img.shields.io/badge/v0.15-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.16"><img alt="Version 0.16 preview" src="https://img.shields.io/badge/v0.16-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
   <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
   <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
 </p>
@@ -11,7 +11,7 @@
 <p align="center">A lightweight, experimental Android launcher. Native views, a familiar Home screen, and room to make it yours.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.15">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.16">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
 </p>
 
 ## A look inside
@@ -60,6 +60,7 @@ Actual emulator captures from development builds. See the testing notes for devi
 - Compatible installed icon packs using `appfilter.xml`, individual icon overrides, and adjustable icon sizes from 36–64 dp.
 - Dark or frosted-glass drawer backgrounds with adjustable opacity and system blur where available. Default: dark at 80% opacity, category sorting.
 - One live app widget: preview, bind/configure through Android, select a page, drag, resize, remove, and preserve its position across restarts.
+- Optional Home return feedback: subtle settling of the workspace and the last launched app icon; this does not control the app window or gesture trajectory. Launcher tasks are excluded from Recents, including existing tasks on upgrade.
 - Unlock entrance animation: icons are staged behind the keyguard, then expand together from a smaller layout on the first eligible Home draw.
 - Dedicated settings and automatic English/Vietnamese localization.
 
@@ -76,7 +77,7 @@ This is an early prototype, not the official Google Pixel Launcher. It does not 
 
 ## Download
 
-[Download the 0.15 prerelease APK](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.15). This is a debug-signed test build, not a Google Play release.
+[Download the 0.16 prerelease APK](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.16). This is a debug-signed test build, not a Google Play release.
 
 ## Build
 
