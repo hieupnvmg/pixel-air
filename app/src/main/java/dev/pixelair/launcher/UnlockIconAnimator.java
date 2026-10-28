@@ -1,17 +1,39 @@
 package dev.pixelair.launcher;
 import android.animation.ValueAnimator;
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.view.*;
 import android.view.animation.PathInterpolator;
 import java.util.*;
 
 /** Stage while covered by keyguard, then animate the very first visible Home frame. */
 final class UnlockIconAnimator {
- private ValueAnimator iphoneAnimator;
+ private int preparedStyle;
+ private final IdentityHashMap<View,Integer> layers=new IdentityHashMap<>();
+ private final ArrayList<Animator> fades=new ArrayList<>();
  private final IdentityHashMap<ViewGroup,boolean[]> clipping=new IdentityHashMap<>();
  private final ArrayList<View> staged=new ArrayList<>(),animated=new ArrayList<>();
  boolean isPrepared(){return !staged.isEmpty();}
- void prepare(List<View> cells){if(isPrepared())return;cancel();for(View cell:cells){staged.add(cell);cell.setAlpha(0);}}
- void cancel(){ValueAnimator old=iphoneAnimator;iphoneAnimator=null;if(old!=null)old.cancel();for(View view:new ArrayList<>(animated)){view.animate().cancel();reset(view);}for(View view:staged)reset(view);animated.clear();staged.clear();restoreClipping();}
+ void prepare(View root,List<View> cells,int style){
+  if(isPrepared()&&preparedStyle==style)return;cancel();preparedStyle=style;
+  Collection<View> targets=cells;
+  if(style==1){LinkedHashSet<View> groups=new LinkedHashSet<>();for(View cell:cells){View target=cell;
+   for(ViewParent p=cell.getParent();p instanceof View;p=p.getParent()){View parent=(View)p;if("unlock-grid".equals(parent.getTag())||"unlock-dock".equals(parent.getTag())){target=parent;break;}}
+   groups.add(target);
+  }targets=groups;}
+  for(View target:targets){staged.add(target);if(style==1){allowFlight(target,root);warmLayer(target);}target.setAlpha(0);}
+ }
+ private void warmLayer(View view){
+  if(layers.containsKey(view)||!view.isAttachedToWindow()||!view.isHardwareAccelerated()||view.getWidth()==0||view.getHeight()==0||view.getLayerType()==View.LAYER_TYPE_SOFTWARE)return;
+  layers.put(view,view.getLayerType());view.setLayerType(View.LAYER_TYPE_HARDWARE,null);view.buildLayer();
+ }
+ void warmPrepared(){
+  if(preparedStyle!=1)return;
+  for(View target:staged){if(!target.isAttachedToWindow()||!target.isHardwareAccelerated()||target.getWidth()==0||target.getHeight()==0)continue;if(layers.containsKey(target))target.buildLayer();else warmLayer(target);}
+ }
+ private void finishLayers(){for(Map.Entry<View,Integer> entry:layers.entrySet())entry.getKey().setLayerType(entry.getValue(),null);layers.clear();fades.clear();}
+
+ void cancel(){for(Animator fade:new ArrayList<>(fades))fade.cancel();fades.clear();for(View view:new ArrayList<>(animated)){view.animate().cancel();reset(view);}for(View view:staged)reset(view);animated.clear();staged.clear();restoreClipping();finishLayers();}
  private void restoreClipping(){for(Map.Entry<ViewGroup,boolean[]> entry:clipping.entrySet()){entry.getKey().setClipChildren(entry.getValue()[0]);entry.getKey().setClipToPadding(entry.getValue()[1]);}clipping.clear();}
  private void allowFlight(View cell,View root){for(ViewParent p=cell.getParent();p instanceof ViewGroup&&p!=root;p=p.getParent()){ViewGroup group=(ViewGroup)p;if(group instanceof WorkspacePager)continue;if(!clipping.containsKey(group))clipping.put(group,new boolean[]{group.getClipChildren(),group.getClipToPadding()});group.setClipChildren(false);group.setClipToPadding(false);}}
  private void reset(View view){view.setTranslationX(0);view.setTranslationY(0);view.setScaleX(1);view.setScaleY(1);view.setAlpha(1);}
@@ -20,26 +42,20 @@ final class UnlockIconAnimator {
   for(View cell:cells){if(!cell.isAttachedToWindow()||cell.getWidth()==0){reset(cell);continue;}cell.getLocationOnScreen(xy);float dx=xy[0]+cell.getWidth()/2f-cx,dy=xy[1]+cell.getHeight()/2f-cy;allowFlight(cell,root);cell.setTranslationX(-dx*.26f);cell.setTranslationY(-dy*.26f);cell.setScaleX(.72f);cell.setScaleY(.72f);cell.setAlpha(0);animated.add(cell);long delay=0;cell.animate().translationX(0).translationY(0).scaleX(1).scaleY(1).alpha(1).setStartDelay(delay).setDuration(500).setInterpolator(new PathInterpolator(.18f,.78f,.2f,1f)).withLayer().withEndAction(()->{reset(cell);animated.remove(cell);if(animated.isEmpty())restoreClipping();}).start();}
   if(animated.isEmpty())restoreClipping();
  }
- private void startIphone(View root,ArrayList<View> cells){
-  int[] xy=new int[2];float minX=Float.MAX_VALUE,maxX=-Float.MAX_VALUE,minY=Float.MAX_VALUE,maxY=-Float.MAX_VALUE;
-  float dockMin=Float.MAX_VALUE,dockMax=-Float.MAX_VALUE;
-  ArrayList<View> visible=new ArrayList<>();
-  for(View cell:cells){if(!cell.isAttachedToWindow()||cell.getWidth()==0){reset(cell);continue;}visible.add(cell);cell.getLocationOnScreen(xy);
-   float x=xy[0]+cell.getWidth()/2f,y=xy[1]+cell.getHeight()/2f;
-   if(isDock(cell)){dockMin=Math.min(dockMin,x);dockMax=Math.max(dockMax,x);}else{minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);}
-  }
-  float centerX=minX==Float.MAX_VALUE?0:(minX+maxX)/2,centerY=minY==Float.MAX_VALUE?0:(minY+maxY)/2;
-  float dockCenter=dockMin==Float.MAX_VALUE?0:(dockMin+dockMax)/2;
-  float[] dx=new float[visible.size()],dy=new float[visible.size()];boolean[] docks=new boolean[visible.size()];
-  for(int n=0;n<visible.size();n++){View cell=visible.get(n);cell.getLocationOnScreen(xy);docks[n]=isDock(cell);dx[n]=xy[0]+cell.getWidth()/2f-(docks[n]?dockCenter:centerX);dy[n]=xy[1]+cell.getHeight()/2f-centerY;allowFlight(cell,root);animated.add(cell);}
-  if(visible.isEmpty()){restoreClipping();return;}
+ private void startIphone(View root,ArrayList<View> targets){
+  final long duration=600;
   float density=root.getResources().getDisplayMetrics().density;
-  ValueAnimator motion=ValueAnimator.ofFloat(0,1);iphoneAnimator=motion;motion.setDuration(UnlockMotion.DURATION_MS);motion.setInterpolator(new android.view.animation.LinearInterpolator());
-  motion.addUpdateListener(a->{float t=(float)a.getAnimatedValue();float grid=UnlockMotion.gridScale(t),dock=UnlockMotion.dockScale(t),spread=UnlockMotion.dockSpread(t),rise=UnlockMotion.dockRise(t)*density;
-   for(int n=0;n<visible.size();n++){View cell=visible.get(n);float scale=docks[n]?dock:grid;cell.setScaleX(scale);cell.setScaleY(scale);cell.setTranslationX(dx[n]*((docks[n]?spread:grid)-1));cell.setTranslationY(docks[n]?rise:dy[n]*(grid-1));cell.setAlpha(docks[n]?UnlockMotion.dockAlpha(t):UnlockMotion.gridAlpha(t));}
-  });
-  motion.addListener(new android.animation.AnimatorListenerAdapter(){@Override public void onAnimationEnd(android.animation.Animator a){if(iphoneAnimator==motion){iphoneAnimator=null;for(View cell:visible)reset(cell);animated.clear();restoreClipping();}}});motion.start();
+  // Animate two cached containers instead of applying six properties to every icon in Java.
+  for(View target:targets){
+   if(!target.isAttachedToWindow()||target.getWidth()==0){reset(target);continue;}
+   boolean dock="unlock-dock".equals(target.getTag());allowFlight(target,root);warmLayer(target);animated.add(target);
+   float scale=dock?.62f:2.1f;
+   target.setScaleX(scale);target.setScaleY(scale);target.setTranslationY(dock?48*density:0);target.setAlpha(0);
+   ObjectAnimator fade=ObjectAnimator.ofFloat(target,View.ALPHA,0,1);fade.setDuration(90);fade.setInterpolator(new android.view.animation.LinearInterpolator());fades.add(fade);fade.start();
+   target.animate().setUpdateListener(null).setListener(null).scaleX(1).scaleY(1).translationX(0).translationY(0).setStartDelay(0).setDuration(duration).setInterpolator(new PathInterpolator(.18f,.78f,.2f,1f)).withEndAction(()->{
+    reset(target);animated.remove(target);if(animated.isEmpty()){restoreClipping();finishLayers();}
+   }).start();
+  }
+  if(animated.isEmpty()){restoreClipping();finishLayers();}
  }
- private boolean isDock(View cell){Object address=cell.getTag(R.id.workspace_address);return address instanceof Integer&&(Integer)address<0;}
-
 }

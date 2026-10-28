@@ -1,4 +1,12 @@
-# Pixel Air 0.19
+# Pixel Air 0.20
+
+## Mới trong 0.20
+
+- Tối ưu phần bắt đầu kiểu mở khóa iPhone: dựng hình theo container lưới/dock thay vì cập nhật mọi icon bằng callback Java mỗi khung hình.
+- Chuẩn bị hardware layer lúc Home còn được che, làm nóng lại khi nhận SCREEN_ON; hoàn trả layer/clipping khi xong hoặc hủy.
+- Dùng property animation và fade ngắn riêng, giữ thời lượng chuyển động 600 ms. Kiểu hiện tại và công tắc giữ nguyên.
+- Đây là bản tối ưu để thử lại trên REDMAGIC; số liệu máy giả lập chưa chứng minh hết khựng trên thiết bị thật.
+- Cài PixelAir-0.20.apk đè bản cũ để giữ dữ liệu.
 
 ## Mới trong 0.19
 

@@ -1,4 +1,13 @@
-# Kiểm tra 0.19
+# Kiểm tra 0.20
+
+- assembleDebug và lintDebug qua. Animation iPhone dùng hai container được gắn tag riêng; bỏ vòng lặp cập nhật sáu thuộc tính cho từng icon mỗi khung hình và bỏ helper hình học cũ.
+- Hardware layer được chuẩn bị khi Home còn che, warm lại ở SCREEN_ON; layer type và clipping gốc được hoàn trả ở kết thúc/cancel.
+- Máy giả lập API 37: preview kiểu Hiện tại còn hoạt động; tắt công tắc/tắt animation hệ thống không phát, icon vẫn hiện; thoát app không phát hiệu ứng mở khóa; lựa chọn giữ sau restart.
+- Chu kỳ Sleep/Wake và keyguard không PIN: style=1 phát đúng một lần. Bounds Chrome/Camera/Google Lens sau animation giống trước. Chạm nhanh trong lúc preview không làm mất icon/search. Không có AndroidRuntime exception.
+- Có thu framestats 0.19/0.20 trên cùng AVD. Các mẫu đều bị chi phối bởi hàng đợi GPU của môi trường OpenGL giả lập, không cho thấy cải thiện rõ ràng và không chứng minh tốc độ trên REDMAGIC. Không cam kết hết khựng hoặc FPS trên máy thật.
+- Cần người dùng thử lại đúng khung hình icon bắt đầu xuất hiện trên REDMAGIC.
+
+## Kiểm tra 0.19
 
 - assembleDebug, lintDebug và 11 lớp kiểm tra model qua. UnlockMotionTest: lưới bắt đầu lớn và thu vào, dock nhỏ đi lên, alpha giới hạn, hình học hội tụ và trở lại đúng trạng thái cuối.
 - UI Settings: mặc định Hiện tại khi nâng cấp, chọn Kiểu iPhone lưu unlockStyle=1, Xem thử đóng Settings và phát style=1 đúng một lần. Đổi lại Hiện tại phát style=0.
