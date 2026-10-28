@@ -1,4 +1,13 @@
-# Kiểm tra 0.20
+# Kiểm tra 0.21
+
+- assembleDebug, lintDebug và 10 lớp kiểm tra model qua. UnlockGateTest mở rộng: Home đã hiển thị, callback keyguard/USER_PRESENT lặp hoặc đến trễ, SCREEN_OFF lỗi thời khi đã bật, chờ focus, expiry, chu kỳ khóa mới và Xem thử rõ ràng.
+- Native Settings: kiểu Hiện tại preview đúng, công tắc tắt/animation hệ thống tắt không phát; thoát app không phát mở khóa; lựa chọn giữ sau restart.
+- Bản cuối, máy giả lập API 37, keyguard không PIN: Sleep/Wake thật phát style=1 một lần. Bấm Home/focus thêm không phát lại. Bounds Chrome, Camera, Google Lens trở về đúng vị trí; không có AndroidRuntime exception.
+- Quay màn hình 540×1200, giải mã toàn bộ 37 frame thực tế của track video. Thành phần xanh Camera trong vùng kiểm tra đi từ bề rộng 136 px ở frame đầu thấy icon xuống khoảng 85 px ở cuối; không thấy chuỗi icon cỡ bình thường rồi lại phóng lớn trong lần quay này. Đây là kiểm tra một bản ghi máy giả lập, không chứng minh mọi khung hình trên ROM REDMAGIC.
+- Icon được ẩn trước khi build hardware layer; guard quyết định trước draw và khóa chu kỳ sau frame Home đã hiện. Khi tín hiệu hệ thống đến trễ, chủ động bỏ hiệu ứng thay vì phát lại.
+- Chưa xác nhận hết nháy trên REDMAGIC thật; preview/snapshot do ROM vẽ vẫn cần bản ghi từ thiết bị nếu hiện tượng còn tiếp diễn.
+
+## Kiểm tra 0.20
 
 - assembleDebug và lintDebug qua. Animation iPhone dùng hai container được gắn tag riêng; bỏ vòng lặp cập nhật sáu thuộc tính cho từng icon mỗi khung hình và bỏ helper hình học cũ.
 - Hardware layer được chuẩn bị khi Home còn che, warm lại ở SCREEN_ON; layer type và clipping gốc được hoàn trả ở kết thúc/cancel.

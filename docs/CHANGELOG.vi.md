@@ -1,4 +1,13 @@
-# Pixel Air 0.20
+# Pixel Air 0.21
+
+## Mới trong 0.21
+
+- Chặn hiệu ứng mở khóa bắt đầu lại sau khi Home đã vẽ một khung hình bình thường; tín hiệu focus/keyguard/USER_PRESENT đến muộn không được ẩn lại icon.
+- Kiểm tra ở mỗi lượt trước khi vẽ khi còn một chu kỳ mở khóa; không polling trạng thái hệ thống ở các frame Home bình thường hoặc khi animation đang chạy.
+- Bỏ lần thử trễ 120 ms; bỏ qua SCREEN_OFF cũ nếu màn hình thực tế đã bật. Chỉ chu kỳ tắt màn hình mới hoặc nút Xem thử có thể mở lại lượt animation.
+- Ẩn icon trước bước tạo hardware layer. Giữ icon đã chuẩn bị ẩn đến khi đủ điều kiện chạy, hoàn trả nếu lượt bị hủy/hết hạn.
+- Nếu hệ thống đã hiện Home trước tín hiệu mở khóa, lượt hiệu ứng đó có thể bị bỏ qua để tránh nháy rồi chạy lại.
+- Cài PixelAir-0.21.apk đè bản cũ để giữ dữ liệu; chưa xác nhận hết hiện tượng nháy trên REDMAGIC thật.
 
 ## Mới trong 0.20
 

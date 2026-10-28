@@ -21,7 +21,7 @@ final class UnlockIconAnimator {
    for(ViewParent p=cell.getParent();p instanceof View;p=p.getParent()){View parent=(View)p;if("unlock-grid".equals(parent.getTag())||"unlock-dock".equals(parent.getTag())){target=parent;break;}}
    groups.add(target);
   }targets=groups;}
-  for(View target:targets){staged.add(target);if(style==1){allowFlight(target,root);warmLayer(target);}target.setAlpha(0);}
+  for(View target:targets){staged.add(target);target.setAlpha(0);if(style==1){allowFlight(target,root);warmLayer(target);}}
  }
  private void warmLayer(View view){
   if(layers.containsKey(view)||!view.isAttachedToWindow()||!view.isHardwareAccelerated()||view.getWidth()==0||view.getHeight()==0||view.getLayerType()==View.LAYER_TYPE_SOFTWARE)return;
