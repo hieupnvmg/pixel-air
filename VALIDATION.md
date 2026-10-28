@@ -1,4 +1,11 @@
-# Kiểm tra 0.16
+# Kiểm tra 0.17
+
+- assembleDebug và lintDebug qua. Không còn source/callback/tùy chọn HomeReturn; kiểm tra DEX không có HomeReturnAnimator hoặc HomeReturnGate.
+- Máy giả lập API 37: mở Chrome, trở về Home không phát PixelAirReturn. Mở đa nhiệm từ Home và từ Chrome đều chỉ thấy Chrome; Home tiếp tục mở bình thường, không có AndroidRuntime exception.
+- Loại bỏ binder AppTask maintenance khỏi onResume, đưa sang app worker lúc khởi tạo. Không đo độ trễ/FPS.
+- REDMAGIC thực tế: người dùng báo 0.16 vẫn hiện thẻ Pixel Air khi mở đa nhiệm từ Home, dù đã chọn làm mặc định. Chưa có bản ghi/trace từ thiết bị để phân biệt task app và preview Home của ROM; không xác nhận 0.17 đã sửa hết lỗi này.
+
+## Kiểm tra 0.16
 
 - assembleDebug, lintDebug và 11 lớp kiểm tra model qua. HomeReturnGateTest kiểm tra rời Home thực sự, chờ focus, một lần mỗi lượt, hết hạn 3 phút, hủy khi khóa và thay app gợi ý.
 - Máy ảo API 37, Pixel Air làm Home mặc định: mở Clock từ drawer rồi bấm Home phát một lần, không tìm icon ở trang khác. Mở Chrome từ Home rồi trở về phát một lần với icon=true; bấm Home tiếp không lặp.

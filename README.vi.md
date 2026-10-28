@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.16"><img alt="Version 0.16 preview" src="https://img.shields.io/badge/v0.16-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.17"><img alt="Version 0.17 preview" src="https://img.shields.io/badge/v0.17-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
   <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
   <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
 </p>
@@ -11,7 +11,7 @@
 <p align="center">Launcher Android gọn nhẹ, giao diện quen thuộc và nhiều tùy chọn để màn hình chính vừa ý bạn.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.16">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.17">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a>
 </p>
 
 ## Một vòng giao diện
@@ -62,7 +62,7 @@
 
 ## Tải bản thử
 
-[Tải APK 0.16 trên GitHub Releases](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.16). Đây là bản debug để thử nghiệm.
+[Tải APK 0.17 trên GitHub Releases](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.17). Đây là bản debug để thử nghiệm.
 
 ## Build
 
@@ -97,7 +97,7 @@ Cài APK và đặt Pixel Air làm ứng dụng màn hình chính mặc định.
 
 Khi báo lỗi, vui lòng ghi model máy, phiên bản Android/ROM, phiên bản launcher và các bước tái hiện. Mã nguồn dùng giấy phép [Apache 2.0](LICENSE); đóng góp và pull request đều được chào đón.
 
-### App drawer 0.16
+### App drawer 0.17
 
 Các nhóm mặc định mở sẵn, có thể chạm tiêu đề để thu gọn hoặc mở rộng, hiện đầy đủ ứng dụng trong một danh sách cuộn. Launcher ghi nhớ trạng thái từng nhóm. Chip tự mở nhóm trước khi cuộn đến; tìm kiếm vẫn lấy app trong các nhóm đã thu gọn. Mỗi nhóm có biểu tượng, màu nhấn và số ứng dụng riêng; hai hàng Hay dùng không trùng app với các nhóm bên dưới.
 
@@ -111,4 +111,4 @@ Vào **Cài đặt Pixel Air → Danh sách ứng dụng → Hướng cuộn →
 
 ### Trở về Home và đa nhiệm
 
-Bản 0.16 có chuyển động nhẹ trên Home/icon của app vừa mở từ Pixel Air, bật/tắt trong Cử chỉ & chuyển động. Hiệu ứng cửa sổ app và quỹ đạo vuốt vẫn do ROM quản lý. Task Pixel Air được loại khỏi danh sách gần đây, cả khi mở từ biểu tượng app hoặc nâng cấp từ bản cũ.
+Bản 0.17 bỏ hoàn toàn hiệu ứng trở về Home được thêm ở 0.16 vì người dùng báo phản hồi chậm. Chỉnh cách tách task của Home theo Launcher3 và chuyển cập nhật task cũ ra khỏi luồng UI. Máy giả lập không hiện thẻ Pixel Air trong đa nhiệm, nhưng lỗi trên REDMAGIC khi vuốt từ Home vẫn cần kiểm chứng thực tế; không coi đây là lỗi đã xác nhận sửa xong.

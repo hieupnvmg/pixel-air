@@ -75,7 +75,6 @@ public final class SettingsActivity extends Activity {
 
         section(getString(R.string.ui_080));
         LinearLayout motion = card();
-        switchRow(motion,getString(R.string.return_animation_title),getString(R.string.return_animation_detail),"returnAnimation",true);divider(motion);
         switchRow(motion,getString(R.string.unlock_animation_title),getString(R.string.unlock_animation_detail),"unlockAnimation",true);divider(motion);
         choiceRow(motion, getString(R.string.ui_081), getString(R.string.ui_082),
                 "motionStyle", new String[]{getString(R.string.ui_083), getString(R.string.ui_084), getString(R.string.ui_085)}, 1);

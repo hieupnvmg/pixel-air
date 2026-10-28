@@ -1,4 +1,12 @@
-# Pixel Air 0.16
+# Pixel Air 0.17
+
+## Mới trong 0.17
+
+- Bỏ hoàn toàn HomeReturnAnimator/HomeReturnGate và công tắc chuyển động khi trở về Home do phản hồi chậm trên REDMAGIC. Giữ hiệu ứng mở khóa cũ.
+- Không chạy quét/cập nhật AppTask trong onResume nữa; chuyển sang worker lúc tạo Home để tránh chặn đường trở về.
+- Home dùng taskAffinity rỗng, clearTaskOnLaunch và stateNotNeeded theo cấu hình Launcher3, giữ excludeFromRecents.
+- Người dùng đã đặt Pixel Air làm mặc định nhưng vẫn thấy thẻ khi mở đa nhiệm từ Home trên REDMAGIC. Kiểm tra máy giả lập chưa tái hiện được; thay đổi task là bản thử, chưa xác nhận sửa xong trên máy thật.
+- Cài PixelAir-0.17.apk đè bản cũ, giữ bố cục và dữ liệu.
 
 ## Mới trong 0.16
 
