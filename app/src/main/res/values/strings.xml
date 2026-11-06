@@ -162,4 +162,6 @@
     <string name="drawer_page_accessibility">%1$s, group page %2$d of %3$d, app page %4$d of %5$d</string>
     <string name="dynamic_color_title">Wallpaper colors</string>
     <string name="dynamic_color_detail">Tint search, the app drawer and settings with colors from your wallpaper (Material You).</string>
+    <string name="drawer_backdrop_title">Category backgrounds</string>
+    <string name="drawer_backdrop_detail">Give each expanded app group in the drawer its own soft pattern and symbol.</string>
 </resources>

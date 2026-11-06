@@ -68,6 +68,8 @@ public final class SettingsActivity extends Activity {
         divider(appearance);
         Switch dynamicColor = switchRow(appearance, getString(R.string.dynamic_color_title), getString(R.string.dynamic_color_detail), LauncherPalette.PREF_KEY, LauncherPalette.DEFAULT_DYNAMIC);
         dynamicColor.setOnCheckedChangeListener((button, checked) -> { prefs.edit().putBoolean(LauncherPalette.PREF_KEY, checked).apply(); recreate(); });
+        divider(appearance);
+        switchRow(appearance, getString(R.string.drawer_backdrop_title), getString(R.string.drawer_backdrop_detail), DrawerBackdrop.PREF_KEY, DrawerBackdrop.DEFAULT);
 
         section(getString(R.string.ui_075));
         LinearLayout icons = card();

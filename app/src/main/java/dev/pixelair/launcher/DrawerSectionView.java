@@ -16,6 +16,7 @@ final class DrawerSectionView extends LinearLayout {
     private boolean boundExpanded;
     private final Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
     private int accent;
+    private DrawerBackdrop backdrop;
     private int dp(float value) { return Math.round(value * getResources().getDisplayMetrics().density); }
     /** Category accent, harmonized with the wallpaper palette when dynamic color is on. */
     static int accent(String key) { return LauncherPalette.current().category(baseAccent(key)); }
@@ -37,7 +38,6 @@ final class DrawerSectionView extends LinearLayout {
     DrawerSectionView(Context context) {
         super(context);
         setGravity(Gravity.CENTER_VERTICAL);
-        setPadding(dp(8), dp(16), dp(8), dp(6));
         setWillNotDraw(false);
         setAccessibilityHeading(true);
         setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
@@ -54,7 +54,10 @@ final class DrawerSectionView extends LinearLayout {
         addView(motif, new LayoutParams(dp(28), dp(24)));
         chevron = new ExpandIndicator(context);
         addView(chevron, new LayoutParams(dp(40), dp(40)));
-        setBackground(new android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(0x18FFFFFF), null, new android.graphics.drawable.ColorDrawable(Color.WHITE)));
+        android.graphics.drawable.GradientDrawable mask = new android.graphics.drawable.GradientDrawable(); mask.setColor(Color.WHITE); mask.setCornerRadius(dp(24));
+        // Same inset and corners as the section backdrop panel, so touch feedback matches the card shape.
+        setBackground(new android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(0x18FFFFFF), null, new android.graphics.drawable.InsetDrawable(mask, dp(6), dp(8), dp(6), dp(4))));
+        setPadding(dp(14), dp(16), dp(8), dp(6)); // after setBackground, which adopts the inset as padding
         for (int n = 0; n < getChildCount(); n++) getChildAt(n).setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
     }
     void bind(String key, String name, int total, boolean expandable, boolean expanded) {
@@ -73,6 +76,17 @@ final class DrawerSectionView extends LinearLayout {
         else chevron.setRotation(rotation);
         boundKey=key; boundExpanded=expanded;
         invalidate();
+    }
+    /** Top slice of the section backdrop when the section is expanded and styled; {@code sectionHeight} 0 hides it. */
+    void setBackdrop(float sectionHeight) {
+        if (sectionHeight <= 0) { if (backdrop != null) { backdrop = null; invalidate(); } return; }
+        if (backdrop == null) backdrop = new DrawerBackdrop(getResources().getDisplayMetrics().density);
+        backdrop.bind(boundKey, 0, sectionHeight, true);
+        invalidate();
+    }
+    @Override protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (backdrop != null) { backdrop.setBounds(0, 0, getWidth(), getHeight()); backdrop.draw(canvas); }
     }
     @Override protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
@@ -102,26 +116,6 @@ final class DrawerSectionView extends LinearLayout {
             path.rewind();path.moveTo(cx-4*density,cy-2*density);path.lineTo(cx,cy+2*density);path.lineTo(cx+4*density,cy-2*density);
             canvas.drawPath(path,paint);
         }
-    }
-    /** A barely tinted horizontal wash: no enclosing cards or rounded category tiles. */
-    static final class Wash extends Drawable {
-        private final Paint paint = new Paint();
-        private int color;
-        void bind(String key) {
-            int next = (accent(key) & 0x00FFFFFF) | 0x06000000;
-            if (next == color) return;
-            color = next; updateShader(); invalidateSelf();
-        }
-        private void updateShader() {
-            Rect r = getBounds();
-            paint.setShader(new LinearGradient(r.left, 0, Math.max(r.left + 1, r.right), 0,
-                    new int[]{color, color & 0x00FFFFFF}, null, Shader.TileMode.CLAMP));
-        }
-        @Override protected void onBoundsChange(Rect bounds) { updateShader(); }
-        @Override public void draw(Canvas canvas) { canvas.drawRect(getBounds(), paint); }
-        @Override public void setAlpha(int value) { paint.setAlpha(value); }
-        @Override public void setColorFilter(ColorFilter filter) { paint.setColorFilter(filter); }
-        @Override public int getOpacity() { return PixelFormat.TRANSLUCENT; }
     }
     private static final class Glyph extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -154,33 +148,39 @@ final class DrawerSectionView extends LinearLayout {
                         else canvas.drawCircle(x + 2, y + 2, 1.6f, paint);
                     }
                 }
-            } else switch (key) {
-                case "games":
-                    canvas.drawRoundRect(2, 6, 22, 18, 4, 4, paint);
-                    canvas.drawLine(5, 12, 11, 12, paint); canvas.drawLine(8, 9, 8, 15, paint);
-                    canvas.drawCircle(16, 10, .7f, paint); canvas.drawCircle(19, 14, .7f, paint); break;
-                case "tools":
-                    for (int n = 0; n < 3; n++) { float x = 4 + n * 8; canvas.drawLine(x, 3, x, 21, paint); }
-                    for (int n = 0; n < 3; n++) { float x = 4 + n * 8, y = n == 1 ? 16 : 8; paint.setStyle(Paint.Style.FILL); canvas.drawCircle(x, y, 3.3f, paint); paint.setStyle(Paint.Style.STROKE); } break;
-                case "media":
-                    path.moveTo(6, 3); path.lineTo(21, 12); path.lineTo(6, 21); path.close(); canvas.drawPath(path, paint); break;
-                case "productivity":
-                    canvas.drawRoundRect(3, 5, 21, 21, 2, 2, paint); canvas.drawRoundRect(8, 1, 16, 6, 1, 1, paint); break;
-                case "social":
-                    canvas.drawRoundRect(2, 3, 22, 18, 5, 5, paint); path.moveTo(6, 18); path.lineTo(5, 22); path.lineTo(12, 18); canvas.drawPath(path, paint); break;
-                case "maps":
-                    path.moveTo(12, 2); path.lineTo(21, 22); path.lineTo(12, 17); path.lineTo(3, 22); path.close(); canvas.drawPath(path, paint); break;
-                case "news":
-                    canvas.drawRoundRect(3, 2, 21, 22, 2, 2, paint); canvas.drawLine(7, 7, 17, 7, paint); canvas.drawLine(7, 12, 17, 12, paint); canvas.drawLine(7, 17, 13, 17, paint); break;
-                case "shopping":
-                    canvas.drawRoundRect(3, 7, 21, 22, 2, 2, paint); canvas.drawArc(7, 1, 17, 13, 180, 180, false, paint); break;
-                case "frequent":
-                    for (int n = 0; n < 10; n++) { double angle = -Math.PI / 2 + n * Math.PI / 5; float radius = n % 2 == 0 ? 11 : 5; float x = 12 + (float)Math.cos(angle) * radius, y = 12 + (float)Math.sin(angle) * radius; if (n == 0) path.moveTo(x, y); else path.lineTo(x, y); }
-                    path.close(); paint.setStyle(Paint.Style.FILL); canvas.drawPath(path, paint); break;
-                default:
-                    for (int n = 0; n < 4; n++) canvas.drawRoundRect(3 + (n % 2) * 11, 3 + (n / 2) * 11, 10 + (n % 2) * 11, 10 + (n / 2) * 11, 1, 1, paint);
-            }
+            } else drawSymbol(canvas, paint, path, key);
             canvas.restore();
+        }
+    }
+
+    /** Category symbol in a 24-unit box, stroked with {@code paint}'s color and width. */
+    static void drawSymbol(Canvas canvas, Paint paint, Path path, String key) {
+        paint.setStyle(Paint.Style.STROKE); path.reset();
+        switch (key) {
+            case "games":
+                canvas.drawRoundRect(2, 6, 22, 18, 4, 4, paint);
+                canvas.drawLine(5, 12, 11, 12, paint); canvas.drawLine(8, 9, 8, 15, paint);
+                canvas.drawCircle(16, 10, .7f, paint); canvas.drawCircle(19, 14, .7f, paint); break;
+            case "tools":
+                for (int n = 0; n < 3; n++) { float x = 4 + n * 8; canvas.drawLine(x, 3, x, 21, paint); }
+                for (int n = 0; n < 3; n++) { float x = 4 + n * 8, y = n == 1 ? 16 : 8; paint.setStyle(Paint.Style.FILL); canvas.drawCircle(x, y, 3.3f, paint); paint.setStyle(Paint.Style.STROKE); } break;
+            case "media":
+                path.moveTo(6, 3); path.lineTo(21, 12); path.lineTo(6, 21); path.close(); canvas.drawPath(path, paint); break;
+            case "productivity":
+                canvas.drawRoundRect(3, 5, 21, 21, 2, 2, paint); canvas.drawRoundRect(8, 1, 16, 6, 1, 1, paint); break;
+            case "social":
+                canvas.drawRoundRect(2, 3, 22, 18, 5, 5, paint); path.moveTo(6, 18); path.lineTo(5, 22); path.lineTo(12, 18); canvas.drawPath(path, paint); break;
+            case "maps":
+                path.moveTo(12, 2); path.lineTo(21, 22); path.lineTo(12, 17); path.lineTo(3, 22); path.close(); canvas.drawPath(path, paint); break;
+            case "news":
+                canvas.drawRoundRect(3, 2, 21, 22, 2, 2, paint); canvas.drawLine(7, 7, 17, 7, paint); canvas.drawLine(7, 12, 17, 12, paint); canvas.drawLine(7, 17, 13, 17, paint); break;
+            case "shopping":
+                canvas.drawRoundRect(3, 7, 21, 22, 2, 2, paint); canvas.drawArc(7, 1, 17, 13, 180, 180, false, paint); break;
+            case "frequent":
+                for (int n = 0; n < 10; n++) { double angle = -Math.PI / 2 + n * Math.PI / 5; float radius = n % 2 == 0 ? 11 : 5; float x = 12 + (float)Math.cos(angle) * radius, y = 12 + (float)Math.sin(angle) * radius; if (n == 0) path.moveTo(x, y); else path.lineTo(x, y); }
+                path.close(); paint.setStyle(Paint.Style.FILL); canvas.drawPath(path, paint); break;
+            default:
+                for (int n = 0; n < 4; n++) canvas.drawRoundRect(3 + (n % 2) * 11, 3 + (n / 2) * 11, 10 + (n % 2) * 11, 10 + (n / 2) * 11, 1, 1, paint);
         }
     }
 }
