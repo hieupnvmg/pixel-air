@@ -114,6 +114,8 @@ The model test script requires a POSIX shell, such as macOS/Linux, Git Bash, or 
 
 ## Contributing
 
+See [AGENTS.md](AGENTS.md) for the code map, build commands, and regression checks for contributors and coding agents.
+
 Bug reports and pull requests are welcome. Include the phone model, Android/ROM version, launcher version, reproduction steps, and whether the problem also occurs with animations or blur disabled. Avoid posting account details or private notifications in screenshots and logs.
 
 Run the build/lint checks and the model tests before submitting a change. Document any device-specific behavior and keep existing workspace data compatible where possible.

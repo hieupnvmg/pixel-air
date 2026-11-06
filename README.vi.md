@@ -11,7 +11,7 @@
 <p align="center">Launcher Android gọn nhẹ, giao diện quen thuộc và nhiều tùy chọn để màn hình chính vừa ý bạn.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18.1">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18.1">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a> · <a href="AGENTS.md">Hướng dẫn sửa code</a>
 </p>
 
 ## Một vòng giao diện
