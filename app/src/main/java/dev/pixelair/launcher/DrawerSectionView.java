@@ -17,7 +17,10 @@ final class DrawerSectionView extends LinearLayout {
     private final Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
     private int accent;
     private int dp(float value) { return Math.round(value * getResources().getDisplayMetrics().density); }
-    static int accent(String key) {
+    /** Category accent, harmonized with the wallpaper palette when dynamic color is on. */
+    static int accent(String key) { return LauncherPalette.current().category(baseAccent(key)); }
+
+    static int baseAccent(String key) {
         switch (key) {
             case "games": return 0xFFD8B4FF;
             case "tools": return 0xFF91E2CB;

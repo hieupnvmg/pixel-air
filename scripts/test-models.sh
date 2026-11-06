@@ -22,8 +22,9 @@ fi
     app/src/main/java/dev/pixelair/launcher/UnlockGate.java \
     app/src/main/java/dev/pixelair/launcher/DrawerPages.java \
     app/src/main/java/dev/pixelair/launcher/DrawerSections.java \
+    app/src/main/java/dev/pixelair/launcher/ColorHarmony.java \
     tests/*.java
-for test in WorkspaceStateTest SwipePhysicsTest AppRankingTest SpringMotionTest IconPackMappingTest AppCategoriesTest WidgetGeometryTest UnlockGateTest DrawerSectionsTest; do
+for test in WorkspaceStateTest SwipePhysicsTest AppRankingTest SpringMotionTest IconPackMappingTest AppCategoriesTest WidgetGeometryTest UnlockGateTest DrawerSectionsTest ColorHarmonyTest; do
     "$JAVA" -ea -cp "$TEST_OUTPUT_DIR" "$test"
 done
 

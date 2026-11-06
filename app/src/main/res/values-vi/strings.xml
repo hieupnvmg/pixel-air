@@ -160,4 +160,6 @@
     <string name="drawer_next_page">Trang ứng dụng tiếp</string>
     <string name="drawer_page_label">%1$s %2$d/%3$d · %4$d/%5$d</string>
     <string name="drawer_page_accessibility">%1$s, trang nhóm %2$d trên %3$d, trang ứng dụng %4$d trên %5$d</string>
+    <string name="dynamic_color_title">Màu theo hình nền</string>
+    <string name="dynamic_color_detail">Tô màu thanh tìm kiếm, ngăn kéo ứng dụng và cài đặt theo màu hình nền (Material You).</string>
 </resources>

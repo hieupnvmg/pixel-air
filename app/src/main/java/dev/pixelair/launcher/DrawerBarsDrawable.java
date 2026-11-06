@@ -10,7 +10,7 @@ public final class DrawerBarsDrawable extends Drawable {
     private final Paint paint = new Paint();
     public DrawerBarsDrawable(View root) { this.root = root; paint.setColor(Color.TRANSPARENT); }
     public void setAmount(int opacity, float progress) {
-        paint.setColor(Color.argb(Math.round(opacity * 2.55f * progress), 23, 26, 34)); invalidateSelf();
+        paint.setColor(ColorHarmony.withAlpha(LauncherPalette.current().drawerSolid, Math.round(opacity * 2.55f * progress))); invalidateSelf();
     }
     @Override public void draw(Canvas canvas) {
         canvas.drawRect(0, 0, root.getWidth(), root.getPaddingTop(), paint);

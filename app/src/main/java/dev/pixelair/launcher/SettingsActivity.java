@@ -19,7 +19,8 @@ import android.widget.*;
 public final class SettingsActivity extends Activity {
     private SharedPreferences prefs;
     private LinearLayout body;
-    private final int ink = 0xFFE8EDF8, muted = 0xFFAAB4C9, accent = 0xFFBDD5FF;
+    private LauncherPalette palette = LauncherPalette.classic();
+    private int ink = palette.settingsText, muted = palette.settingsMuted, accent = palette.primary;
 
     private int dp(float n) { return Math.round(n * getResources().getDisplayMetrics().density); }
     private GradientDrawable background(int color, int radius) {
@@ -29,12 +30,15 @@ public final class SettingsActivity extends Activity {
         TextView t = new TextView(this); t.setText(value); t.setTextSize(size); t.setTextColor(color); return t;
     }
     @Override public void onCreate(Bundle state) {
+        prefs = getSharedPreferences("home", 0);
+        palette = LauncherPalette.load(this, prefs); setTheme(palette.theme());
+        ink = palette.settingsText; muted = palette.settingsMuted; accent = palette.primary;
         super.onCreate(state);
-        prefs = getSharedPreferences("home", 0);LauncherDefaults.apply(prefs);
-        getWindow().setStatusBarColor(0xFF10151F);
-        getWindow().setNavigationBarColor(0xFF10151F);
+        LauncherDefaults.apply(prefs);
+        getWindow().setStatusBarColor(palette.settingsBackground);
+        getWindow().setNavigationBarColor(palette.settingsBackground);
         LinearLayout root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL); root.setBackgroundColor(0xFF10151F);
+        root.setOrientation(LinearLayout.VERTICAL); root.setBackgroundColor(palette.settingsBackground);
         root.setOnApplyWindowInsetsListener((v, insets) -> {
             android.graphics.Insets bars = insets.getInsets(WindowInsets.Type.systemBars());
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom); return insets;
@@ -61,6 +65,9 @@ public final class SettingsActivity extends Activity {
         divider(appearance);
         addSearchPosition(appearance);
         divider(appearance);addIconSize(appearance);
+        divider(appearance);
+        Switch dynamicColor = switchRow(appearance, getString(R.string.dynamic_color_title), getString(R.string.dynamic_color_detail), LauncherPalette.PREF_KEY, LauncherPalette.DEFAULT_DYNAMIC);
+        dynamicColor.setOnCheckedChangeListener((button, checked) -> { prefs.edit().putBoolean(LauncherPalette.PREF_KEY, checked).apply(); recreate(); });
 
         section(getString(R.string.ui_075));
         LinearLayout icons = card();
@@ -173,20 +180,20 @@ public final class SettingsActivity extends Activity {
     }
     private LinearLayout card() {
         LinearLayout card = new LinearLayout(this); card.setOrientation(LinearLayout.VERTICAL);
-        card.setPadding(dp(16), dp(8), dp(16), dp(8)); card.setBackground(background(0xFF1C2433, 22));
+        card.setPadding(dp(16), dp(8), dp(16), dp(8)); card.setBackground(background(palette.card, 22));
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(-1, -2); p.bottomMargin = dp(4); body.addView(card, p); return card;
     }
     private LinearLayout labels(String title, String detail) {
         LinearLayout labels = new LinearLayout(this); labels.setOrientation(LinearLayout.VERTICAL); labels.setPadding(0, dp(12), 0, dp(12));
         labels.addView(text(title, 16, ink)); TextView sub = text(detail, 12, muted); sub.setPadding(0, dp(5), 0, 0); labels.addView(sub); return labels;
     }
-    private void divider(LinearLayout parent) { View line = new View(this); line.setBackgroundColor(0xFF2D374A); parent.addView(line, new LinearLayout.LayoutParams(-1, dp(1))); }
-    private void switchRow(LinearLayout parent, String title, String detail, String key, boolean defaultValue) {
+    private void divider(LinearLayout parent) { View line = new View(this); line.setBackgroundColor(palette.divider); parent.addView(line, new LinearLayout.LayoutParams(-1, dp(1))); }
+    private Switch switchRow(LinearLayout parent, String title, String detail, String key, boolean defaultValue) {
         LinearLayout row = new LinearLayout(this); row.setGravity(Gravity.CENTER_VERTICAL);
         row.addView(labels(title, detail), new LinearLayout.LayoutParams(0, -2, 1));
         Switch toggle = new Switch(this); toggle.setContentDescription(title); toggle.setChecked(prefs.getBoolean(key, defaultValue));
         toggle.setOnCheckedChangeListener((button, checked) -> prefs.edit().putBoolean(key, checked).apply()); row.addView(toggle);
-        row.setOnClickListener(v -> toggle.setChecked(!toggle.isChecked())); parent.addView(row);
+        row.setOnClickListener(v -> toggle.setChecked(!toggle.isChecked())); parent.addView(row); return toggle;
     }
     private RadioButton radio(String label) { RadioButton r = new RadioButton(this); r.setText(label); r.setTextColor(ink); r.setTextSize(15); r.setPadding(0, dp(4), 0, dp(4)); r.setMinimumHeight(dp(48)); return r; }
     private void choiceRow(LinearLayout parent, String title, String detail, String key, String[] choices, int defaultValue) {

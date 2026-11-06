@@ -17,14 +17,15 @@ public final class DrawerGlassDrawable extends Drawable {
     @Override protected void onBoundsChange(Rect bounds) {
         rect.set(bounds);
         int alpha = Math.round(opacity * 2.55f);
+        LauncherPalette p = LauncherPalette.current();
         tint = new LinearGradient(0, rect.top, rect.width(), rect.bottom,
-                glass ? new int[]{Color.argb(Math.min(255, alpha + 12), 61, 72, 94), Color.argb(alpha, 20, 27, 41), Color.argb(alpha, 33, 43, 59)}
-                      : new int[]{Color.argb(alpha, 23, 26, 34), Color.argb(alpha, 23, 26, 34)}, null, Shader.TileMode.CLAMP);
+                glass ? new int[]{ColorHarmony.withAlpha(p.glassTop, Math.min(255, alpha + 12)), ColorHarmony.withAlpha(p.glassMiddle, alpha), ColorHarmony.withAlpha(p.glassBottom, alpha)}
+                      : new int[]{ColorHarmony.withAlpha(p.drawerSolid, alpha), ColorHarmony.withAlpha(p.drawerSolid, alpha)}, null, Shader.TileMode.CLAMP);
     }
     @Override public void draw(Canvas canvas) {
         paint.setStyle(Paint.Style.FILL); paint.setShader(tint);
         canvas.drawRoundRect(rect, radius, radius, paint); paint.setShader(null);
-        if (glass) { paint.setStyle(Paint.Style.STROKE); paint.setStrokeWidth(1.5f); paint.setColor(0x44EAF2FF); canvas.drawRoundRect(new RectF(rect.left+1,rect.top+1,rect.right-1,rect.bottom-1),radius,radius,paint); }
+        if (glass) { paint.setStyle(Paint.Style.STROKE); paint.setStrokeWidth(1.5f); paint.setColor(LauncherPalette.current().glassStroke); canvas.drawRoundRect(new RectF(rect.left+1,rect.top+1,rect.right-1,rect.bottom-1),radius,radius,paint); }
     }
     @Override public void setAlpha(int alpha) {} // Opacity is configured explicitly; view alpha handles transitions.
     @Override public void setColorFilter(ColorFilter filter) { paint.setColorFilter(filter); }
