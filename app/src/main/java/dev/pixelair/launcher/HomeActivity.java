@@ -149,13 +149,45 @@ public class HomeActivity extends Activity {
  void renderSlots(){boolean pendingUnlock=unlockPreDraw!=null;boolean restage=unlockAnimator.isPrepared();cancelUnlockEntrance();if(pageContainer==null)return;pageContainer.refresh(model.currentPage);dockRow.removeAllViews();for(int n=0;n<4;n++)dockRow.addView(slotCell(-n-1,false),new LinearLayout.LayoutParams(0,-1,1));renderDots();if(restage)prepareUnlockEntrance();if(pendingUnlock)tryUnlockEntrance();}
  void renderDots(){pageDots.setVisibility(appliedDots?View.VISIBLE:View.GONE);pageDots.removeAllViews();for(int n=0;n<model.pages.size();n++){final int target=n;TextView dot=text(n==model.currentPage?"●":"•",n==model.currentPage?10:15,n==model.currentPage?Color.WHITE:0x88FFFFFF);dot.setContentDescription(getString(R.string.ui_004)+(n+1)+(n==model.currentPage?getString(R.string.ui_005):""));dot.setOnClickListener(v->selectPage(target));pageDots.addView(dot,new LinearLayout.LayoutParams(dp(24),-1));}pageContainer.setContentDescription(getString(R.string.ui_006)+(model.currentPage+1)+getString(R.string.ui_007)+model.pages.size());}
  void selectPage(int target){if(placingWidget){model.currentPage=target;placementPage=target;save();renderSlots();}else pageContainer.selectPage(target);}
- LinearLayout slotCell(int address,boolean showLabel){App app=find(model.get(address));LinearLayout cell=appCell(app,showLabel&&labels,Color.WHITE);cell.setTag(R.id.workspace_address,address);if(app!=null)cell.setTag("occupied");cell.setOnClickListener(v->{App a=find(model.get(address));if(editingHome||a==null)pickSlot(address);else launch(a,v);});if(editingHome){GradientDrawable outline=bg(palette.editFill,16);outline.setStroke(dp(1),palette.editStroke);cell.setBackground(outline);if(app==null&&!placingWidget)((ImageView)cell.getChildAt(0)).setImageDrawable(getDrawable(R.drawable.ic_add));}cell.setOnLongClickListener(v->{iconLongPressed=true;App a=find(model.get(address));if(a==null){showWorkspacePopup(downX,downY);return true;}if(editingHome)startIconDrag(v,address);else showHomePopup(v,address,a);return true;});cell.setOnDragListener((v,e)->{
- int action=e.getAction();if(action==DragEvent.ACTION_DRAG_STARTED)return true;
- if(action==DragEvent.ACTION_DRAG_ENTERED)v.setBackground(bg(0x44FFFFFF,18));
- if(action==DragEvent.ACTION_DRAG_LOCATION){int[] xy=new int[2];v.getLocationInWindow(xy);dragEdge(xy[0]+e.getX());}
- if(action==DragEvent.ACTION_DRAG_EXITED||action==DragEvent.ACTION_DRAG_ENDED)v.setBackgroundColor(Color.TRANSPARENT);
- if(action==DragEvent.ACTION_DROP){cancelEdge();if(isWidgetReserved(address)){Toast.makeText(this,getString(R.string.ui_066),Toast.LENGTH_SHORT).show();return true;}int source=dragSource;dragSource=Integer.MIN_VALUE;dragging=false;if(source==Integer.MIN_VALUE){if(drawerDragId!=null)addDrawerShortcut(drawerDragId,address);return true;}if(source==address)return true;String old=model.get(address);if(!old.isEmpty())new AlertDialog.Builder(this).setTitle(getString(R.string.ui_008)).setItems(new String[]{getString(R.string.ui_009),getString(R.string.ui_010)},(d,w)->{if(w==0)model.swap(source,address);else model.merge(source,address);save();renderSlots();}).show();else{model.swap(source,address);save();renderSlots();}return true;}
- if(action==DragEvent.ACTION_DRAG_ENDED)cancelEdge();return true;});return cell;}
+ LinearLayout slotCell(int address,boolean showLabel){App app=find(model.get(address));LinearLayout cell=appCell(app,showLabel&&labels,Color.WHITE);cell.setTag(R.id.workspace_address,address);if(app!=null)cell.setTag("occupied");cell.setOnClickListener(v->{App a=find(model.get(address));if(editingHome||a==null)pickSlot(address);else launch(a,v);});
+  HomeCellFrame frame=new HomeCellFrame(density(),editingHome,palette.editFill,palette.editStroke,dragAccent());cell.setBackground(frame);
+  if(editingHome&&app==null&&!placingWidget)((ImageView)cell.getChildAt(0)).setImageDrawable(getDrawable(R.drawable.ic_add));
+  cell.setOnLongClickListener(v->{iconLongPressed=true;App a=find(model.get(address));if(a==null){showWorkspacePopup(downX,downY);return true;}if(editingHome)startIconDrag(v,address);else showHomePopup(v,address,a);return true;});
+  cell.setOnDragListener((v,e)->slotDrag(v,e,address,frame));return cell;}
+ int dragAccent(){return palette.dynamic?palette.primary:0xFFB9D4FF;}
+ /** Hovering over an occupied slot's icon this long turns the drop into "create folder"; elsewhere a drop swaps. */
+ static final long FOLDER_HOVER_MS=400;
+ HomeCellFrame folderHoverFrame;View folderHoverCell,dimmedDragSource;
+ final Runnable folderArm=()->{if(folderHoverFrame==null||folderHoverCell==null)return;View icon=((LinearLayout)folderHoverCell).getChildAt(0);folderHoverFrame.showFolderRing(icon.getLeft(),icon.getTop(),icon.getRight(),icon.getBottom());folderHoverCell.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK);};
+ boolean slotDrag(View v,DragEvent e,int address,HomeCellFrame frame){
+  int action=e.getAction();
+  if(action==DragEvent.ACTION_DRAG_STARTED)return true;
+  boolean target=address!=dragSource&&!isWidgetReserved(address);
+  if(action==DragEvent.ACTION_DRAG_ENTERED){if(target)frame.setState(HomeCellFrame.TARGET);return true;}
+  if(action==DragEvent.ACTION_DRAG_LOCATION){int[] xy=new int[2];v.getLocationInWindow(xy);dragEdge(xy[0]+e.getX());if(target)updateFolderHover(v,address,frame,e.getX(),e.getY());return true;}
+  if(action==DragEvent.ACTION_DRAG_EXITED){if(folderHoverFrame==frame)clearFolderHover();frame.setState(HomeCellFrame.IDLE);return true;}
+  if(action==DragEvent.ACTION_DRAG_ENDED){if(folderHoverFrame==frame)clearFolderHover();frame.setState(HomeCellFrame.IDLE);cancelEdge();restoreDragSource();return true;}
+  if(action!=DragEvent.ACTION_DROP)return true;
+  boolean folder=frame.state()==HomeCellFrame.FOLDER;clearFolderHover();frame.setState(HomeCellFrame.IDLE);cancelEdge();
+  if(isWidgetReserved(address)){Toast.makeText(this,getString(R.string.ui_066),Toast.LENGTH_SHORT).show();return true;}
+  int source=dragSource;dragSource=Integer.MIN_VALUE;dragging=false;
+  if(source==Integer.MIN_VALUE){String id=drawerDragId;if(id==null)return true;
+   if(folder){drawerDragId=null;String old=model.get(address);if(!Arrays.asList(old.split("\\|")).contains(id))model.put(address,old+"|"+id);save();renderSlots();}
+   else addDrawerShortcut(id,address);
+   return true;}
+  if(source==address)return true;
+  if(folder)model.merge(source,address);else model.swap(source,address);
+  save();renderSlots();return true;
+ }
+ void updateFolderHover(View cell,int address,HomeCellFrame frame,float x,float y){
+  if(model.get(address).isEmpty()){if(folderHoverFrame==frame)clearFolderHover();return;}
+  View icon=((LinearLayout)cell).getChildAt(0);
+  boolean over=Math.hypot(x-(icon.getLeft()+icon.getWidth()/2f),y-(icon.getTop()+icon.getHeight()/2f))<icon.getWidth()*.65f;
+  if(over){if(folderHoverFrame!=frame){clearFolderHover();folderHoverFrame=frame;folderHoverCell=cell;handler.postDelayed(folderArm,FOLDER_HOVER_MS);}}
+  else if(folderHoverFrame==frame){clearFolderHover();frame.setState(HomeCellFrame.TARGET);}
+ }
+ void clearFolderHover(){handler.removeCallbacks(folderArm);folderHoverFrame=null;folderHoverCell=null;}
+ void restoreDragSource(){if(dimmedDragSource!=null){dimmedDragSource.setAlpha(1);dimmedDragSource=null;}}
  final Runnable edgeSwitch=()->{int direction=edgeDirection;edgeDirection=0;if(!dragging||direction==0)return;int target=model.currentPage+direction;if(target<0)return;if(target>=model.pages.size()){if(model.empty(model.currentPage))return;model.addPage();}model.currentPage=target;save();renderSlots();};
  void dragEdge(float x){int direction=x<dp(32)?-1:x>root.getWidth()-dp(32)?1:0;if(direction==edgeDirection)return;handler.removeCallbacks(edgeSwitch);edgeDirection=direction;if(direction!=0)handler.postDelayed(edgeSwitch,600);}
  void cancelEdge(){handler.removeCallbacks(edgeSwitch);edgeDirection=0;}
@@ -272,10 +304,70 @@ public class HomeActivity extends Activity {
  void closeDrawerImmediately(){if(drawerAnimator!=null){drawerAnimator.cancel();drawerAnimator=null;}if(drawer!=null){((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(drawer.getWindowToken(),0);drawer.setVisibility(View.INVISIBLE);drawer.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);drawer.setTranslationY(0);drawer=null;if(query!=null)query.setText("");if(drawerList!=null){drawerList.smoothScrollBy(0,0);drawerList.setSelection(0);requestedCategoryChip=null;selectCategoryChip("all",false);if(drawerPager!=null){drawerPage=0;drawerPager.refresh(0);updateDrawerPageLabel();}}drawerProgress=0;if(homeScrim!=null)homeScrim.setAlpha(255);applyWindowBlur(0);if(drawerBars!=null)drawerBars.setAmount(drawerOpacity,drawerProgress);home.setAlpha(1);home.setTranslationY(0);home.setScaleX(1);home.setScaleY(1);home.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);home.requestFocus();}}
  void startDrawerDrag(View source,App app){if(app==null)return;drawerDragId=app.id;dragSource=Integer.MIN_VALUE;dragging=true;iconLongPressed=true;if(source.startDragAndDrop(ClipData.newPlainText("app",app.id),new View.DragShadowBuilder(source),app.id,0))closeDrawerImmediately();else{drawerDragId=null;dragging=false;}}
  void addDrawerShortcut(String id,int address){drawerDragId=null;if(address!=Integer.MIN_VALUE&&!isWidgetReserved(address)&&model.get(address).isEmpty())model.put(address,id);else model.currentPage=addAppRespectWidgets(id);save();renderSlots();}
- void showWorkspacePopup(float x,float y){dismissHomePopup();LinearLayout menu=new LinearLayout(this);menu.setOrientation(LinearLayout.VERTICAL);menu.setPadding(dp(8),dp(8),dp(8),dp(8));menu.setBackground(bg(palette.field,18));menu.setElevation(dp(12));menu.setClickable(true);menu.setFocusableInTouchMode(true);menu.setAccessibilityPaneTitle(getString(R.string.ui_042));TextView editHome=text(getString(R.string.ui_043),16,palette.text);menu.addView(editHome,new LinearLayout.LayoutParams(-1,dp(52)));editHome.setOnClickListener(v->{dismissHomePopup();setEditing(true);});TextView addWidget=text("Widget",16,palette.text);menu.addView(addWidget,new LinearLayout.LayoutParams(-1,dp(52)));addWidget.setOnClickListener(v->{dismissHomePopup();pickWidget();});TextView wallpaper=text(getString(R.string.ui_044),16,palette.text);wallpaper.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);wallpaper.setPadding(dp(16),0,dp(16),0);menu.addView(wallpaper,new LinearLayout.LayoutParams(-1,dp(56)));wallpaper.setOnClickListener(v->{dismissHomePopup();safe(Intent.createChooser(new Intent(Intent.ACTION_SET_WALLPAPER),getString(R.string.ui_044)));});TextView launcher=text(getString(R.string.ui_025),16,palette.action);launcher.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);launcher.setPadding(dp(16),0,dp(16),0);menu.addView(launcher,new LinearLayout.LayoutParams(-1,dp(56)));launcher.setOnClickListener(v->settings());int width=dp(240);menu.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(width,-2);lp.leftMargin=Math.max(dp(8),Math.min(root.getWidth()-width-dp(8),(int)x-width/2));lp.topMargin=Math.max(dp(8),Math.min(root.getHeight()-root.getPaddingTop()-root.getPaddingBottom()-menu.getMeasuredHeight()-dp(8),(int)y-root.getPaddingTop()-menu.getMeasuredHeight()/2));homePopup=menu;root.addView(menu,lp);home.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);menu.requestFocus();}
+ void showWorkspacePopup(float x,float y){dismissHomePopup();
+  LinearLayout menu=popupMenu(getString(R.string.ui_042));
+  popupRow(menu,getString(R.string.ui_043),null,palette.text,()->setEditing(true));
+  popupRow(menu,getString(R.string.home_widgets),null,palette.text,this::pickWidget);
+  popupRow(menu,getString(R.string.ui_044),null,palette.text,()->safe(Intent.createChooser(new Intent(Intent.ACTION_SET_WALLPAPER),getString(R.string.ui_044))));
+  popupDivider(menu);
+  popupRow(menu,getString(R.string.ui_025),null,palette.action,this::settings);
+  int width=dp(240);menu.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));
+  FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(width,-2);
+  lp.leftMargin=Math.max(dp(8),Math.min(root.getWidth()-width-dp(8),(int)x-width/2));
+  lp.topMargin=Math.max(dp(8),Math.min(root.getHeight()-root.getPaddingTop()-root.getPaddingBottom()-menu.getMeasuredHeight()-dp(8),(int)y-root.getPaddingTop()-menu.getMeasuredHeight()/2));
+  showPopup(menu,lp);
+ }
+ LinearLayout popupMenu(String title){LinearLayout menu=new LinearLayout(this);menu.setOrientation(LinearLayout.VERTICAL);menu.setPadding(0,dp(6),0,dp(6));menu.setBackground(bg(palette.field,20));menu.setClipToOutline(true);menu.setElevation(dp(12));menu.setClickable(true);menu.setFocusableInTouchMode(true);menu.setAccessibilityPaneTitle(title);return menu;}
+ /** One menu row: optional leading icon, start-aligned label, ripple; tapping closes the menu first. */
+ TextView popupRow(LinearLayout menu,CharSequence label,Drawable icon,int color,Runnable action){
+  TextView row=text(label.toString(),15,color);row.setSingleLine();row.setEllipsize(TextUtils.TruncateAt.END);row.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);row.setPadding(dp(18),0,dp(16),0);
+  if(icon!=null){icon.setBounds(0,0,dp(22),dp(22));row.setCompoundDrawablesRelative(icon,null,null,null);row.setCompoundDrawablePadding(dp(14));}
+  row.setBackground(new RippleDrawable(android.content.res.ColorStateList.valueOf(0x22FFFFFF),null,new ColorDrawable(Color.WHITE)));
+  row.setOnClickListener(v->{dismissHomePopup();action.run();});menu.addView(row,new LinearLayout.LayoutParams(-1,dp(48)));return row;
+ }
+ void popupDivider(LinearLayout menu){View line=new View(this);line.setBackgroundColor(ColorHarmony.withAlpha(palette.hint,0x40));LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,dp(1));lp.setMargins(dp(14),dp(5),dp(14),dp(5));menu.addView(line,lp);}
+ void showPopup(LinearLayout menu,FrameLayout.LayoutParams lp){homePopup=menu;root.addView(menu,lp);home.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);menu.requestFocus();}
+ /** Static and dynamic shortcuts the app publishes for its launcher activity, manifest ones first; at most four. */
+ List<ShortcutInfo> appShortcuts(App app){
+  ArrayList<ShortcutInfo> result=new ArrayList<>();ComponentName component=ComponentName.unflattenFromString(app.id);LauncherApps launcherApps=getSystemService(LauncherApps.class);
+  if(component==null||launcherApps==null)return result;
+  try{if(!launcherApps.hasShortcutHostPermission())return result;
+   LauncherApps.ShortcutQuery query=new LauncherApps.ShortcutQuery().setPackage(component.getPackageName()).setActivity(component).setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST|LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC);
+   List<ShortcutInfo> found=launcherApps.getShortcuts(query,android.os.Process.myUserHandle());if(found!=null)result.addAll(found);
+  }catch(RuntimeException e){return new ArrayList<>();}
+  result.removeIf(info->!info.isEnabled());
+  result.sort((a,b)->a.isDeclaredInManifest()!=b.isDeclaredInManifest()?(a.isDeclaredInManifest()?-1:1):Integer.compare(a.getRank(),b.getRank()));
+  return result.size()>4?new ArrayList<>(result.subList(0,4)):result;
+ }
+ void startAppShortcut(ShortcutInfo info,View anchor){
+  try{Rect bounds=new Rect();if(anchor==null||!anchor.getGlobalVisibleRect(bounds))bounds=null;getSystemService(LauncherApps.class).startShortcut(info,bounds,null);}
+  catch(RuntimeException e){Toast.makeText(this,getString(R.string.ui_021),Toast.LENGTH_SHORT).show();}
+ }
  void dismissHomePopup(){if(homePopup!=null){root.removeView(homePopup);homePopup=null;if(drawer==null)home.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);}pendingDragView=null;}
- void showHomePopup(View anchor,int address,App app){dismissHomePopup();pendingDragView=anchor;pendingDragAddress=address;LinearLayout menu=new LinearLayout(this);menu.setOrientation(LinearLayout.VERTICAL);menu.setPadding(dp(8),dp(8),dp(8),dp(8));menu.setBackground(bg(palette.field,16));menu.setElevation(dp(12));menu.setClickable(true);menu.setFocusableInTouchMode(true);menu.setAccessibilityPaneTitle(getString(R.string.ui_045)+app.label);TextView remove=text(app.id.contains("|")?getString(R.string.ui_046):getString(R.string.ui_017),14,palette.text);remove.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);remove.setPadding(dp(12),0,dp(12),0);menu.addView(remove,new LinearLayout.LayoutParams(-1,dp(52)));remove.setOnClickListener(v->{dismissHomePopup();model.put(address,"");save();renderSlots();});if(!app.id.contains("|")){TextView customize=text(getString(R.string.ui_047),14,palette.text);menu.addView(customize,new LinearLayout.LayoutParams(-1,dp(48)));customize.setOnClickListener(v->{dismissHomePopup();pickSlot(address);});TextView info=text(getString(R.string.ui_038),14,palette.action);info.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);info.setPadding(dp(12),0,dp(12),0);menu.addView(info,new LinearLayout.LayoutParams(-1,dp(48)));info.setOnClickListener(v->{dismissHomePopup();safe(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:"+ComponentName.unflattenFromString(app.id).getPackageName())));});}TextView hint=text(getString(R.string.ui_048),11,palette.hint);menu.addView(hint,new LinearLayout.LayoutParams(-1,dp(32)));int width=dp(232);menu.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));int[] xy=new int[2],rootXY=new int[2];anchor.getLocationOnScreen(xy);root.getLocationOnScreen(rootXY);FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(width,-2);lp.leftMargin=Math.max(dp(8),Math.min(root.getWidth()-width-dp(8),xy[0]-rootXY[0]));lp.topMargin=Math.max(dp(8),xy[1]-rootXY[1]-root.getPaddingTop()-menu.getMeasuredHeight()-dp(8));homePopup=menu;root.addView(menu,lp);home.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);menu.requestFocus();}
- void startIconDrag(View source,int address){App app=find(model.get(address));if(app==null)return;dragSource=address;dragging=true;source.startDragAndDrop(ClipData.newPlainText("app",app.id),new View.DragShadowBuilder(source),app.id,0);}
+ void showHomePopup(View anchor,int address,App app){dismissHomePopup();pendingDragView=anchor;pendingDragAddress=address;
+  boolean folder=app.id.contains("|");LinearLayout menu=popupMenu(getString(R.string.ui_045)+app.label);
+  if(!folder){List<ShortcutInfo> shortcuts=appShortcuts(app);LauncherApps launcherApps=getSystemService(LauncherApps.class);
+   for(ShortcutInfo info:shortcuts){CharSequence label=info.getShortLabel()!=null?info.getShortLabel():info.getLongLabel();if(label==null)continue;
+    Drawable icon=null;try{icon=launcherApps.getShortcutIconDrawable(info,getResources().getDisplayMetrics().densityDpi);}catch(RuntimeException ignored){}
+    popupRow(menu,label,icon,palette.text,()->startAppShortcut(info,anchor));}
+   if(!shortcuts.isEmpty())popupDivider(menu);
+   popupRow(menu,getString(R.string.ui_047),null,palette.text,()->pickSlot(address));
+   popupRow(menu,getString(R.string.ui_038),null,palette.text,()->safe(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:"+ComponentName.unflattenFromString(app.id).getPackageName()))));
+  }
+  popupRow(menu,getString(folder?R.string.ui_046:R.string.ui_017),null,palette.action,()->{model.put(address,"");save();renderSlots();});
+  TextView hint=text(getString(R.string.ui_048),11,palette.hint);menu.addView(hint,new LinearLayout.LayoutParams(-1,dp(28)));
+  int width=dp(248);menu.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));
+  int[] xy=new int[2],rootXY=new int[2];anchor.getLocationOnScreen(xy);root.getLocationOnScreen(rootXY);
+  int anchorTop=xy[1]-rootXY[1]-root.getPaddingTop(),anchorBottom=anchorTop+anchor.getHeight(),height=menu.getMeasuredHeight();
+  int available=root.getHeight()-root.getPaddingTop()-root.getPaddingBottom();
+  FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(width,-2);
+  lp.leftMargin=Math.max(dp(8),Math.min(root.getWidth()-width-dp(8),xy[0]-rootXY[0]+anchor.getWidth()/2-width/2));
+  // Prefer above the icon so the finger does not cover the menu; fall back to below, then clamp.
+  int top=anchorTop-height-dp(8);if(top<dp(8))top=anchorBottom+dp(8);
+  lp.topMargin=Math.max(dp(8),Math.min(available-height-dp(8),top));
+  showPopup(menu,lp);
+ }
+ void startIconDrag(View source,int address){App app=find(model.get(address));if(app==null)return;dragSource=address;dragging=true;restoreDragSource();if(source.startDragAndDrop(ClipData.newPlainText("app",app.id),new View.DragShadowBuilder(source),app.id,0)){source.setAlpha(.3f);dimmedDragSource=source;}else{dragSource=Integer.MIN_VALUE;dragging=false;}}
  void settings(){dismissHomePopup();closeDrawerImmediately();startActivityForResult(new Intent(this,SettingsActivity.class),40);}
  void settingsAction(String action){if(action==null)return;switch(action){case "addPage":model.currentPage=model.addPage();save();renderSlots();break;case "removePage":if(prefs.getInt("widget",-1)!=-1&&prefs.getInt("widgetPage",0)==model.currentPage){Toast.makeText(this,getString(R.string.ui_049),Toast.LENGTH_SHORT).show();break;}int removedPage=model.currentPage;if(!model.removeEmptyCurrentPage())Toast.makeText(this,getString(R.string.ui_050),Toast.LENGTH_SHORT).show();else if(prefs.getInt("widgetPage",0)>removedPage)prefs.edit().putInt("widgetPage",prefs.getInt("widgetPage",0)-1).remove("widgetReserved").apply();save();renderSlots();break;case "editSlots":setEditing(true);break;case "categories":chooseAppGrid(getString(R.string.ui_016),this::chooseCategory,null);break;case "moveWidget":int widgetId=prefs.getInt("widget",-1);if(widgetId!=-1)startWidgetPlacement(widgetId);else pickWidget();break;case "addWidget":pickWidget();break;case "removeWidget":removeHomeWidget();break;default:break;}}
  void pickWidget(){LauncherEditors.widgets(this,widgetManager.getInstalledProviders(),info->{pendingWidget=widgetHost.allocateAppWidgetId();if(widgetManager.bindAppWidgetIdIfAllowed(pendingWidget,info.provider))finishWidget(pendingWidget,true);else startActivityForResult(new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND).putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,pendingWidget).putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER,info.provider),22);});}
@@ -285,7 +377,7 @@ public class HomeActivity extends Activity {
  void chooseCategory(App app){String[] options=new String[categoryTitles().length+1];options[0]=getString(R.string.ui_052);System.arraycopy(categoryTitles(),0,options,1,categoryTitles().length);int current=0;for(int n=0;n<AppCategories.KEYS.length;n++)if(AppCategories.KEYS[n].equals(prefs.getString("category:"+app.id,"")))current=n+1;new AlertDialog.Builder(this).setTitle(getString(R.string.ui_053)+app.label).setSingleChoiceItems(options,current,(d,n)->{if(n==0)prefs.edit().remove("category:"+app.id).apply();else prefs.edit().putString("category:"+app.id,AppCategories.KEYS[n-1]).apply();if(drawerAdapter!=null)fillDrawer(query.getText().toString());d.dismiss();}).setNegativeButton(getString(R.string.ui_035),null).show();}
  void chooseAppGrid(String title,java.util.function.Consumer<App> callback,Runnable reset){LauncherEditors.apps(this,title,apps,app->iconPack==null?app.icon:iconPack.icon(app.id,app.icon),callback,reset);}
  View editToolbar;
- void setEditing(boolean active){if(placingWidget)return;dismissHomePopup();closeDrawerImmediately();editingHome=active;if(editToolbar!=null){root.removeView(editToolbar);editToolbar=null;}homeContent.setPadding(0,dp(active?66:12),0,dp(appliedSearchGap));renderSlots();if(!active)return;LinearLayout bar=new LinearLayout(this);bar.setGravity(Gravity.CENTER_VERTICAL);bar.setPadding(dp(12),0,dp(12),0);bar.setBackground(bg(palette.toolbar,18));TextView help=text(getString(R.string.ui_054),12,palette.text);bar.addView(help,new LinearLayout.LayoutParams(0,dp(52),1));TextView widget=text("Widget",14,palette.action);bar.addView(widget,new LinearLayout.LayoutParams(dp(68),dp(52)));widget.setOnClickListener(v->{int id=prefs.getInt("widget",-1);if(id!=-1)new AlertDialog.Builder(this).setItems(new String[]{getString(R.string.ui_055),getString(R.string.ui_056),getString(R.string.ui_061)},(d,n)->{if(n==0)startWidgetPlacement(id);else if(n==1)pickWidget();else removeHomeWidget();}).show();else pickWidget();});TextView done=text(getString(R.string.ui_057),15,palette.action);bar.addView(done,new LinearLayout.LayoutParams(dp(56),dp(52)));done.setOnClickListener(v->setEditing(false));FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(-1,dp(52),Gravity.TOP);lp.setMargins(dp(12),dp(6),dp(12),0);editToolbar=bar;root.addView(bar,lp);}
+ void setEditing(boolean active){if(placingWidget)return;dismissHomePopup();closeDrawerImmediately();editingHome=active;if(editToolbar!=null){root.removeView(editToolbar);editToolbar=null;}homeContent.setPadding(0,dp(active?66:12),0,dp(appliedSearchGap));renderSlots();if(!active)return;LinearLayout bar=new LinearLayout(this);bar.setGravity(Gravity.CENTER_VERTICAL);bar.setPadding(dp(12),0,dp(12),0);bar.setBackground(bg(palette.toolbar,18));TextView help=text(getString(R.string.ui_054),12,palette.text);bar.addView(help,new LinearLayout.LayoutParams(0,dp(52),1));TextView widget=text(getString(R.string.home_widgets),14,palette.action);bar.addView(widget,new LinearLayout.LayoutParams(dp(68),dp(52)));widget.setOnClickListener(v->{int id=prefs.getInt("widget",-1);if(id!=-1)new AlertDialog.Builder(this).setItems(new String[]{getString(R.string.ui_055),getString(R.string.ui_056),getString(R.string.ui_061)},(d,n)->{if(n==0)startWidgetPlacement(id);else if(n==1)pickWidget();else removeHomeWidget();}).show();else pickWidget();});TextView done=text(getString(R.string.ui_057),15,palette.action);bar.addView(done,new LinearLayout.LayoutParams(dp(56),dp(52)));done.setOnClickListener(v->setEditing(false));FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(-1,dp(52),Gravity.TOP);lp.setMargins(dp(12),dp(6),dp(12),0);editToolbar=bar;root.addView(bar,lp);}
 
  boolean isWidgetReserved(int address){return address>=0&&prefs.getInt("widget",-1)!=-1&&prefs.getString("widgetReserved","").contains(","+address+",");}
  int addAppRespectWidgets(String id){for(int p=-1;p<model.pages.size();p++){int page=p==-1?model.currentPage:p;for(int n=0;n<model.capacity(page);n++){int address=page*20+n;if(model.get(address).isEmpty()&&!isWidgetReserved(address)){model.put(address,id);return page;}}}int page=model.addPage();model.put(page*20,id);return page;}
