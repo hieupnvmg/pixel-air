@@ -1,3 +1,25 @@
+# Pixel Air 0.22 — Màu theo hình nền và hiệu ứng mở khóa mới
+
+## Màu theo hình nền (Material You)
+
+- Thanh tìm kiếm Google, drawer (nền tối và kính mờ), chip nhóm, menu nhấn giữ, thanh chỉnh sửa, khung đặt widget và màn Cài đặt dùng bảng màu hệ thống lấy từ hình nền.
+- Màu riêng của từng nhóm app được giữ nhưng xoay sắc độ tối đa 15° về màu chủ đạo để hợp tông.
+- Chữ nằm trực tiếp trên hình nền (đồng hồ, ngày, tên app ở Home, chấm trang), logo Google và màu báo lỗi giữ nguyên.
+- Công tắc mới **Cài đặt → Màn hình chính → Màu theo hình nền**, mặc định bật. Tắt để quay lại đúng màu navy cũ. Home tự cập nhật khi đổi hình nền hoặc bảng màu hệ thống.
+
+## Hiệu ứng mở khóa
+
+- Icon chuyển động theo lò xo, nảy nhẹ khoảng 9% rồi dừng; mỗi icon 420 ms thay cho 500 ms.
+- Icon gần tâm màn hình xuất hiện trước, xa nhất trễ tối đa 80 ms; trên thực tế lưới icon chảy từ đồng hồ xuống, dock đến sau cùng.
+- Biên độ vừa phải hơn: bắt đầu từ 82% kích thước và lệch 18% về tâm (trước là 72% và 26%). Dock chuyển động bằng một nửa lưới.
+- Đồng hồ thu nhẹ từ 104% về 100% cùng icon.
+- Thời điểm phát hiệu ứng (UnlockGate, staging sau màn khóa, OnPreDraw) giữ nguyên như 0.18; không dùng lại code 0.19–0.21.
+
+## Cài đặt
+
+- versionCode 23. Cài PixelAir-0.22.apk đè 0.18.1 để giữ dữ liệu, với điều kiện APK được ký cùng certificate với các bản trước.
+- Mới thử trên máy giả lập Android 17 / API 37 không có PIN; chưa thử trên REDMAGIC và chưa thử mở khóa bằng PIN/vân tay/khuôn mặt.
+
 # Pixel Air 0.18.1 — Rollback về 0.18
 
 - Khôi phục source theo tag v0.18, commit 58cd94f. Bỏ các thay đổi từ 0.19 đến 0.21.

@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18.1"><img alt="Version 0.18.1 preview" src="https://img.shields.io/badge/v0.18.1-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.22"><img alt="Version 0.22 preview" src="https://img.shields.io/badge/v0.22-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
   <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
   <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
 </p>
@@ -11,7 +11,7 @@
 <p align="center">Launcher Android gọn nhẹ, giao diện quen thuộc và nhiều tùy chọn để màn hình chính vừa ý bạn.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18.1">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a> · <a href="AGENTS.md">Hướng dẫn sửa code</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.22">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a> · <a href="AGENTS.md">Hướng dẫn sửa code</a>
 </p>
 
 ## Một vòng giao diện
@@ -39,7 +39,7 @@
     </td>
     <td>
       <h3>Từ hình nền đến màn hình chính.</h3>
-      <p>Lưới icon bắt đầu nhỏ rồi bung đồng bộ về vị trí, thay vì hiện đầy đủ trước rồi mới chạy lại.</p>
+      <p>Icon lan dần từ đồng hồ xuống rồi nảy nhẹ về vị trí, thay vì hiện đầy đủ trước rồi mới chạy lại.</p>
       <ul>
         <li>Một lần chuyển động cho mỗi lần mở khóa</li>
         <li>Widget và hình nền đứng yên</li>
@@ -57,12 +57,13 @@
 - Icon pack dạng appfilter, thay icon riêng và chỉnh kích thước 36–64 dp.
 - Nền tối/kính mờ; mặc định nền tối 80% và xếp app theo loại.
 - Một widget: xem trước, chọn trang/vị trí, kéo đổi cỡ và xóa. Lưu widget mới sẽ thay widget hiện tại.
-- Hiệu ứng mở khóa: icon được ẩn sau màn khóa rồi bung đồng bộ từ nhỏ ra lớn khi Home bắt đầu vẽ.
+- Hiệu ứng mở khóa: icon được ẩn sau màn khóa, rồi lan dần từ tâm màn hình và nảy nhẹ về vị trí khi Home bắt đầu vẽ. Dock chuyển động nhẹ hơn, đồng hồ thu nhẹ cùng icon.
+- Màu theo hình nền (Material You): thanh tìm kiếm, drawer, menu và cài đặt đổi màu theo bảng màu hệ thống lấy từ hình nền. Tắt ở **Cài đặt → Màn hình chính → Màu theo hình nền** để giữ màu navy cũ.
 - Cài đặt riêng, tự theo ngôn ngữ hệ thống Việt/Anh.
 
 ## Tải bản thử
 
-[Tải APK 0.18.1 trên GitHub Releases](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.18.1). Đây là bản debug để thử nghiệm.
+[Tải APK 0.22 trên GitHub Releases](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.22). Đây là bản debug để thử nghiệm.
 
 ## Build
 
@@ -114,3 +115,5 @@ Vào **Cài đặt Pixel Air → Danh sách ứng dụng → Hướng cuộn →
 Bản 0.17 bỏ hoàn toàn hiệu ứng trở về Home được thêm ở 0.16 vì người dùng báo phản hồi chậm. Chỉnh cách tách task của Home theo Launcher3 và chuyển cập nhật task cũ ra khỏi luồng UI. Máy giả lập không hiện thẻ Pixel Air trong đa nhiệm, nhưng lỗi trên REDMAGIC khi vuốt từ Home vẫn cần kiểm chứng thực tế; không coi đây là lỗi đã xác nhận sửa xong.
 
 Bản 0.18.1 khôi phục code đúng 0.18. Chỉ đổi thông tin phiên bản để cài đè 0.19–0.21 mà không xóa dữ liệu.
+
+Bản 0.22 thêm màu theo hình nền và hiệu ứng mở khóa dạng lò xo ngắn hơn. Thời điểm phát hiệu ứng giữ nguyên như 0.18. Bản ghi hình ở trên là chuyển động cũ.

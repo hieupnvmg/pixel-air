@@ -1,3 +1,11 @@
+# Kiểm tra 0.22
+
+- assembleDebug và lintDebug qua: 0 lỗi, 31 cảnh báo, bằng số cảnh báo của 0.18.1. 12 lớp kiểm tra model qua, thêm ColorHarmonyTest và UnlockMotionTest.
+- Máy giả lập Android 17 / API 37, 1080×2400, keyguard không PIN.
+- Màu theo hình nền: đổi bảng màu hệ thống sang cam bằng theme_customization_overlay_packages, drawer, chip, ô tìm kiếm và Cài đặt đổi theo; tắt công tắc thì drawer về đúng màu navy cũ; bật lại và khôi phục bảng màu ban đầu. Không có AndroidRuntime exception.
+- Hiệu ứng mở khóa: quay màn hình nhiều chu kỳ Sleep/Wake, trích khung hình 30 fps của bản 0.18.1 và 0.22 trên cùng máy giả lập. 0.18.1: cả lưới hiện cùng lúc, chuyển động thấy được khoảng 300 ms. 0.22: hàng trên xuất hiện trước, dock sau cùng, chuyển động thấy được khoảng 200 ms, nảy nhẹ trước khi dừng. Log "Home entrance staged before first draw" một lần mỗi chu kỳ.
+- Chưa kiểm tra: REDMAGIC thật, mở khóa bằng PIN/vân tay/khuôn mặt, luồng đặt/kéo widget, drawer kính mờ và drawer ngang sau khi đổi màu, giao diện tiếng Việt trên máy.
+
 # Kiểm tra rollback 0.18.1
 
 - Java source, manifest, styles, model tests và scripts khôi phục từ v0.18. Chỉ khác versionCode/versionName và chuỗi hiển thị phiên bản trong app.
