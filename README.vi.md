@@ -17,15 +17,21 @@
 ## Một vòng giao diện
 
 <table>
-  <tr><th>Màn hình chính</th><th>Danh sách ứng dụng</th><th>Tùy chỉnh theo ý bạn</th></tr>
+  <tr><th>Màn hình chính</th><th>Danh sách ứng dụng</th><th>Thư mục</th></tr>
   <tr>
-    <td align="center"><img src="docs/assets/home.png" width="220" alt="Pixel Air Home screen with clock, app grid, dock and search" /></td>
-    <td align="center"><img src="docs/assets/drawer.png" width="220" alt="App drawer with frequent apps and app categories" /></td>
-    <td align="center"><img src="docs/assets/settings.png" width="220" alt="Launcher settings for icon packs, icon size and motion" /></td>
+    <td align="center"><img src="docs/assets/home.png" width="220" alt="Pixel Air Home screen with clock, app grid, two folders, dock with a notification dot and search bar" /></td>
+    <td align="center"><img src="docs/assets/drawer.png" width="220" alt="App drawer with Frequent apps and app groups, each on its own patterned background" /></td>
+    <td align="center"><img src="docs/assets/folder.png" width="220" alt="Google folder open as an icon grid panel above the Home screen" /></td>
+  </tr>
+  <tr><th>Tìm kiếm</th><th>Icon theo chủ đề</th><th>Tùy chỉnh theo ý bạn</th></tr>
+  <tr>
+    <td align="center"><img src="docs/assets/search.png" width="220" alt="Drawer search for “ca” showing apps, an app shortcut, system settings pages and a web search" /></td>
+    <td align="center"><img src="docs/assets/themed-icons.png" width="220" alt="Home screen with themed monochrome icons tinted from the wallpaper" /></td>
+    <td align="center"><img src="docs/assets/settings.png" width="220" alt="Pixel Air settings with icon packs, themed icons, notification dots and motion options" /></td>
   </tr>
 </table>
 
-Ảnh giao diện thật từ các bản thử nghiệm trên máy ảo. Chi tiết thiết bị đã thử nằm trong ghi chú kiểm tra.
+Ảnh giao diện thật chụp từ bản 0.23 trên máy giả lập Android 17. Chi tiết thiết bị đã thử nằm trong ghi chú kiểm tra.
 
 ## Mở khóa, bung icon liền mạch
 
@@ -109,13 +115,13 @@ Khi báo lỗi, vui lòng ghi model máy, phiên bản Android/ROM, phiên bản
 
 Các nhóm mặc định mở sẵn, có thể chạm tiêu đề để thu gọn hoặc mở rộng, hiện đầy đủ ứng dụng trong một danh sách cuộn. Launcher ghi nhớ trạng thái từng nhóm. Chip tự mở nhóm trước khi cuộn đến; tìm kiếm vẫn lấy app trong các nhóm đã thu gọn. Mỗi nhóm có biểu tượng, màu nhấn và số ứng dụng riêng; hai hàng Hay dùng không trùng app với các nhóm bên dưới.
 
-<p align="center"><img src="docs/assets/drawer-collapsed.png" width="220" alt="Media category collapsed; other app groups remain visible" /></p>
+<p align="center"><img src="docs/assets/drawer-collapsed.png" width="220" alt="Tools and Media groups collapsed; other app groups stay open" /></p>
 
 ### Cuộn ngang tùy chọn
 
 Vào **Cài đặt Pixel Air → Danh sách ứng dụng → Hướng cuộn → Ngang**. Vuốt trái/phải đổi trang theo nhóm; nhóm nhiều app tự chia thêm trang. Chip nhảy đến trang đầu của nhóm, tìm kiếm lấy app ở mọi trang. Chế độ ngang hiển thị đủ app và không dùng thu/mở nhóm; trạng thái thu gọn vẫn được giữ cho chế độ dọc. Dọc vẫn là mặc định.
 
-<p align="center"><img src="docs/assets/drawer-horizontal.png" width="220" alt="App drawer ngang, trang Media và chỉ báo trang" /></p>
+<p align="center"><img src="docs/assets/drawer-horizontal.png" width="220" alt="App drawer ngang, trang Hay dùng và chỉ báo trang" /></p>
 
 ### Trở về Home và đa nhiệm
 

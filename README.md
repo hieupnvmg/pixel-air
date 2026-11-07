@@ -17,15 +17,29 @@
 ## A look inside
 
 <table>
-  <tr><th>Home</th><th>App drawer</th><th>Make it yours</th></tr>
+  <tr><th>Home</th><th>App drawer</th><th>Folders</th></tr>
   <tr>
-    <td align="center"><img src="docs/assets/home.png" width="220" alt="Pixel Air Home screen with clock, app grid, dock and search" /></td>
-    <td align="center"><img src="docs/assets/drawer.png" width="220" alt="App drawer with frequent apps and app categories" /></td>
-    <td align="center"><img src="docs/assets/settings.png" width="220" alt="Launcher settings for icon packs, icon size and motion" /></td>
+    <td align="center"><img src="docs/assets/home.png" width="220" alt="Pixel Air Home screen with clock, app grid, two folders, dock with a notification dot and search bar" /></td>
+    <td align="center"><img src="docs/assets/drawer.png" width="220" alt="App drawer with Frequent apps and app groups, each on its own patterned background" /></td>
+    <td align="center"><img src="docs/assets/folder.png" width="220" alt="Google folder open as an icon grid panel above the Home screen" /></td>
+  </tr>
+  <tr><th>Search</th><th>Themed icons</th><th>Make it yours</th></tr>
+  <tr>
+    <td align="center"><img src="docs/assets/search.png" width="220" alt="Drawer search for “ca” showing apps, an app shortcut, system settings pages and a web search" /></td>
+    <td align="center"><img src="docs/assets/themed-icons.png" width="220" alt="Home screen with themed monochrome icons tinted from the wallpaper" /></td>
+    <td align="center"><img src="docs/assets/settings.png" width="220" alt="Pixel Air settings with icon packs, themed icons, notification dots and motion options" /></td>
   </tr>
 </table>
 
-Actual emulator captures from development builds. See the testing notes for device coverage.
+Actual emulator captures from version 0.23 (Android 17 emulator). See the testing notes for device coverage.
+
+<table>
+  <tr><th>Collapsible groups</th><th>Horizontal pages</th></tr>
+  <tr>
+    <td align="center"><img src="docs/assets/drawer-collapsed.png" width="220" alt="Tools and Media groups collapsed; other app groups stay open" /></td>
+    <td align="center"><img src="docs/assets/drawer-horizontal.png" width="220" alt="Optional horizontal drawer showing the Frequent page and page navigation" /></td>
+  </tr>
+</table>
 
 ## Unlock, in one motion
 
@@ -131,10 +145,6 @@ Run the build/lint checks and the model tests before submitting a change. Docume
 ## License
 
 Pixel Air source code is available under the [Apache License 2.0](LICENSE). See [NOTICE](NOTICE) for third-party notices. Product names and third-party app logos belong to their respective owners.
-
-<p align="center"><img src="docs/assets/drawer-collapsed.png" width="220" alt="Media category collapsed; other app groups remain visible" /></p>
-
-<p align="center"><img src="docs/assets/drawer-horizontal.png" width="220" alt="Optional horizontal drawer with a Media page and page navigation" /></p>
 
 Version 0.17 removes the experimental Home-return feedback because of latency reported on REDMAGIC. Task isolation and Recents exclusion were adjusted; the reported Home-to-Recents issue still needs validation on the physical device.
 
