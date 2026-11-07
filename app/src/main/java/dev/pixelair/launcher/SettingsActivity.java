@@ -81,6 +81,13 @@ public final class SettingsActivity extends Activity {
             Intent market = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("market://search?q=icon%20pack&c=apps"));
             try { startActivity(market); } catch (Exception e) { safe(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://play.google.com/store/search?q=icon%20pack&c=apps"))); }
         });
+        divider(icons);
+        switchRow(icons, getString(R.string.themed_icons_title), getString(R.string.themed_icons_detail), ThemedIcons.PREF_KEY, ThemedIcons.DEFAULT);
+        divider(icons);
+        switchRow(icons, getString(R.string.dots_title), getString(R.string.dots_detail), NotificationDots.PREF_KEY, NotificationDots.DEFAULT);
+        dotsAccess = text("", 13, accent); dotsAccess.setPadding(0, 0, 0, dp(12)); icons.addView(dotsAccess);
+        dotsAccess.setOnClickListener(v -> openNotificationAccess());
+        updateDotsAccess();
 
         section(getString(R.string.ui_080));
         LinearLayout motion = card();
@@ -90,6 +97,18 @@ public final class SettingsActivity extends Activity {
         divider(motion);
         choiceRow(motion, getString(R.string.ui_086), getString(R.string.ui_087),
                 "swipeSensitivity", new String[]{getString(R.string.ui_088), getString(R.string.ui_084), getString(R.string.ui_089)}, 1);
+        divider(motion);
+        choiceRow(motion, getString(R.string.gesture_swipe_down_title), getString(R.string.gesture_swipe_down_detail),
+                "swipeDownAction", new String[]{getString(R.string.gesture_none), getString(R.string.gesture_notifications)}, 1);
+        divider(motion);
+        Switch doubleTap = switchRow(motion, getString(R.string.gesture_lock_title), getString(R.string.gesture_lock_detail), "doubleTapLock", false);
+        doubleTap.setOnCheckedChangeListener((button, checked) -> {
+            prefs.edit().putBoolean("doubleTapLock", checked).apply();
+            if (checked && !LauncherAccessibility.enabled(this))
+                new AlertDialog.Builder(this).setTitle(getString(R.string.gesture_lock_title)).setMessage(getString(R.string.gesture_lock_needs_service))
+                        .setPositiveButton(getString(R.string.gesture_open_accessibility), (d, w) -> HomeActivity.openAccessibilitySettings(this))
+                        .setNegativeButton(getString(R.string.ui_035), null).show();
+        });
 
         section(getString(R.string.ui_090));
         LinearLayout apps = card();
@@ -106,6 +125,26 @@ public final class SettingsActivity extends Activity {
         group.setOnCheckedChangeListener((g, id) -> prefs.edit().putBoolean("sortByUsage", id != abc.getId()).putBoolean("groupByCategory",id==categories.getId()).apply());
         apps.addView(group);
         divider(apps);actionRow(apps,getString(R.string.ui_092),getString(R.string.ui_093),()->action("categories"));
+        divider(apps);actionRow(apps, getString(R.string.hidden_apps_title), getString(R.string.hidden_apps_detail), this::chooseHiddenApps);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            divider(apps);switchRow(apps, getString(R.string.private_space), getString(R.string.private_space_detail), PrivateSpace.PREF_KEY, true);
+        }
+
+        section(getString(R.string.search_section));
+        LinearLayout search = card();
+        switchRow(search, getString(R.string.search_shortcuts), getString(R.string.search_shortcuts_detail), "searchShortcuts", true);
+        divider(search);
+        switchRow(search, getString(R.string.search_settings), getString(R.string.search_settings_detail), "searchSettings", true);
+        divider(search);
+        contactsSwitch = switchRow(search, getString(R.string.search_contacts), getString(R.string.search_contacts_detail), "searchContacts", false);
+        if (contactsSwitch.isChecked() && checkSelfPermission(android.Manifest.permission.READ_CONTACTS) != android.content.pm.PackageManager.PERMISSION_GRANTED) contactsSwitch.setChecked(false);
+        contactsSwitch.setOnCheckedChangeListener((button, checked) -> {
+            prefs.edit().putBoolean("searchContacts", checked).apply();
+            if (checked && checkSelfPermission(android.Manifest.permission.READ_CONTACTS) != android.content.pm.PackageManager.PERMISSION_GRANTED)
+                requestPermissions(new String[]{android.Manifest.permission.READ_CONTACTS}, CONTACTS);
+        });
+        divider(search);
+        switchRow(search, getString(R.string.search_web), getString(R.string.search_web_detail), "searchWeb", true);
 
         section(getString(R.string.ui_094));
         LinearLayout workspace = card();
@@ -121,6 +160,12 @@ public final class SettingsActivity extends Activity {
         divider(workspace);
         actionRow(workspace, getString(R.string.ui_061), getString(R.string.ui_103), () -> action("removeWidget"));
 
+        section(getString(R.string.backup_section));
+        LinearLayout backup = card();
+        actionRow(backup, getString(R.string.backup_title), getString(R.string.backup_detail), this::startBackup);
+        divider(backup);
+        actionRow(backup, getString(R.string.restore_title), getString(R.string.restore_detail), this::startRestore);
+
         section(getString(R.string.ui_104));
         LinearLayout system = card();
         actionRow(system, getString(R.string.ui_105), getString(R.string.ui_106), () -> {
@@ -135,6 +180,125 @@ public final class SettingsActivity extends Activity {
         footer.setGravity(Gravity.CENTER); footer.setPadding(0, dp(24), 0, dp(8)); body.addView(footer);
         root.requestApplyInsets();
         getOnBackInvokedDispatcher().registerOnBackInvokedCallback(0, this::finish);
+    }
+    private static final int BACKUP = 30, RESTORE = 31, CONTACTS = 32;
+    private Switch contactsSwitch;
+    @Override public void onRequestPermissionsResult(int request, String[] permissions, int[] results) {
+        super.onRequestPermissionsResult(request, permissions, results);
+        if (request != CONTACTS || contactsSwitch == null) return;
+        boolean granted = results.length > 0 && results[0] == android.content.pm.PackageManager.PERMISSION_GRANTED;
+        if (!granted) { contactsSwitch.setChecked(false); Toast.makeText(this, getString(R.string.search_contacts_denied), Toast.LENGTH_LONG).show(); }
+    }
+    /** Apps hidden here leave the drawer but stay on Home and in search. */
+    private void chooseHiddenApps() {
+        android.content.pm.PackageManager pm = getPackageManager();
+        java.util.ArrayList<String[]> entries = new java.util.ArrayList<>();
+        for (android.content.pm.ResolveInfo r : pm.queryIntentActivities(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER), 0)) {
+            if (r.activityInfo.packageName.equals(getPackageName())) continue;
+            entries.add(new String[]{new android.content.ComponentName(r.activityInfo.packageName, r.activityInfo.name).flattenToString(), r.loadLabel(pm).toString()});
+        }
+        java.text.Collator collator = java.text.Collator.getInstance(); entries.sort((a, b) -> collator.compare(a[1], b[1]));
+        String[] labels = new String[entries.size()]; boolean[] checked = new boolean[entries.size()];
+        for (int n = 0; n < entries.size(); n++) { labels[n] = entries.get(n)[1]; checked[n] = prefs.getBoolean("hidden:" + entries.get(n)[0], false); }
+        new AlertDialog.Builder(this).setTitle(getString(R.string.hidden_apps_title))
+                .setMultiChoiceItems(labels, checked, (d, which, value) -> checked[which] = value)
+                .setPositiveButton(getString(R.string.ui_057), (d, w) -> {
+                    SharedPreferences.Editor edit = prefs.edit();
+                    for (int n = 0; n < entries.size(); n++) { String key = "hidden:" + entries.get(n)[0]; if (checked[n]) edit.putBoolean(key, true); else edit.remove(key); }
+                    edit.apply();
+                })
+                .setNegativeButton(getString(R.string.ui_035), null).show();
+    }
+    private void startBackup() {
+        String day = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT).format(new java.util.Date());
+        Intent create = new Intent(Intent.ACTION_CREATE_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE)
+                .setType("application/json").putExtra(Intent.EXTRA_TITLE, "pixel-air-" + day + ".json");
+        try { startActivityForResult(create, BACKUP); } catch (Exception e) { safe(create); }
+    }
+    private void startRestore() {
+        Intent open = new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE)
+                .setType("*/*").putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"application/json", "text/plain", "application/octet-stream"});
+        try { startActivityForResult(open, RESTORE); } catch (Exception e) { safe(open); }
+    }
+    @Override protected void onActivityResult(int request, int result, Intent data) {
+        super.onActivityResult(request, result, data);
+        if (result != RESULT_OK || data == null || data.getData() == null) return;
+        if (request == BACKUP) writeBackup(data.getData());
+        else if (request == RESTORE) readBackup(data.getData());
+    }
+    /** Writes every portable "home" preference with its type, so a restore puts back exactly the same values. */
+    private void writeBackup(android.net.Uri target) {
+        try {
+            org.json.JSONObject values = new org.json.JSONObject();
+            for (java.util.Map.Entry<String, ?> entry : prefs.getAll().entrySet()) {
+                if (!LayoutBackup.portable(entry.getKey()) || entry.getValue() == null) continue;
+                Object value = entry.getValue(); String type;
+                if (value instanceof String) type = "string"; else if (value instanceof Integer) type = "int";
+                else if (value instanceof Long) type = "long"; else if (value instanceof Float) type = "float";
+                else if (value instanceof Boolean) type = "boolean";
+                else if (value instanceof java.util.Set) { type = "set"; value = new org.json.JSONArray((java.util.Set<?>) value); }
+                else continue;
+                values.put(entry.getKey(), new org.json.JSONObject().put("type", type).put("value", value));
+            }
+            org.json.JSONObject file = new org.json.JSONObject().put("app", LayoutBackup.APP).put("format", LayoutBackup.FORMAT)
+                    .put("created", System.currentTimeMillis()).put("prefs", values);
+            try (java.io.OutputStream out = getContentResolver().openOutputStream(target, "wt")) {
+                if (out == null) throw new java.io.IOException("No output stream");
+                out.write(file.toString(1).getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            }
+            Toast.makeText(this, getString(R.string.backup_done), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) { Toast.makeText(this, getString(R.string.backup_failed), Toast.LENGTH_LONG).show(); }
+    }
+    private void readBackup(android.net.Uri source) {
+        org.json.JSONObject values;
+        try (java.io.InputStream in = getContentResolver().openInputStream(source)) {
+            if (in == null) throw new java.io.IOException("No input stream");
+            java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(); byte[] chunk = new byte[8192]; int n;
+            while ((n = in.read(chunk)) > 0) { buffer.write(chunk, 0, n); if (buffer.size() > 4 << 20) throw new java.io.IOException("Too large"); }
+            org.json.JSONObject file = new org.json.JSONObject(buffer.toString("UTF-8"));
+            if (!LayoutBackup.APP.equals(file.optString("app")) || file.optInt("format") != LayoutBackup.FORMAT) throw new IllegalArgumentException("Not a Pixel Air backup");
+            values = file.getJSONObject("prefs");
+        } catch (Exception e) { Toast.makeText(this, getString(R.string.restore_invalid), Toast.LENGTH_LONG).show(); return; }
+        new AlertDialog.Builder(this).setTitle(getString(R.string.restore_title)).setMessage(getString(R.string.restore_confirm))
+                .setPositiveButton(getString(R.string.restore_apply), (d, w) -> applyBackup(values))
+                .setNegativeButton(getString(R.string.ui_035), null).show();
+    }
+    /** Replaces portable preferences with the backup's; widget state stays as it is on this phone. */
+    private void applyBackup(org.json.JSONObject values) {
+        SharedPreferences.Editor edit = prefs.edit();
+        try {
+            for (String key : prefs.getAll().keySet()) if (LayoutBackup.portable(key)) edit.remove(key);
+            java.util.ArrayList<String> keys = new java.util.ArrayList<>(); for (java.util.Iterator<String> it = values.keys(); it.hasNext(); ) keys.add(it.next());
+            for (String key : LayoutBackup.restorable(keys)) {
+                org.json.JSONObject entry = values.getJSONObject(key);
+                switch (entry.getString("type")) {
+                    case "string": edit.putString(key, entry.getString("value")); break;
+                    case "int": edit.putInt(key, entry.getInt("value")); break;
+                    case "long": edit.putLong(key, entry.getLong("value")); break;
+                    case "float": edit.putFloat(key, (float) entry.getDouble("value")); break;
+                    case "boolean": edit.putBoolean(key, entry.getBoolean("value")); break;
+                    case "set": { org.json.JSONArray array = entry.getJSONArray("value"); java.util.HashSet<String> set = new java.util.HashSet<>();
+                        for (int n = 0; n < array.length(); n++) set.add(array.getString(n)); edit.putStringSet(key, set); break; }
+                    default: break;
+                }
+            }
+        } catch (Exception e) { Toast.makeText(this, getString(R.string.restore_invalid), Toast.LENGTH_LONG).show(); return; }
+        edit.apply(); // in memory at once, so the recreated Home reads the restored values
+        Toast.makeText(this, getString(R.string.restore_done), Toast.LENGTH_SHORT).show();
+        action("reload");
+    }
+    private TextView dotsAccess;
+    @Override protected void onResume() { super.onResume(); updateDotsAccess(); }
+    private void updateDotsAccess() {
+        if (dotsAccess == null) return;
+        boolean granted = NotificationDots.accessGranted(this);
+        dotsAccess.setText(getString(granted ? R.string.dots_access_granted : R.string.dots_access_needed));
+        dotsAccess.setTextColor(granted ? muted : accent); dotsAccess.setClickable(true);
+    }
+    private void openNotificationAccess() {
+        Intent detail = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_DETAIL_SETTINGS)
+                .putExtra(Settings.EXTRA_NOTIFICATION_LISTENER_COMPONENT_NAME, new android.content.ComponentName(this, NotificationDots.class).flattenToString());
+        try { startActivity(detail); } catch (Exception e) { safe(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)); }
     }
     private void addIconSize(LinearLayout parent){parent.addView(labels(getString(R.string.ui_109),getString(R.string.ui_110)));ImageView preview=new ImageView(this);preview.setImageDrawable(getDrawable(R.drawable.ic_launcher));LinearLayout.LayoutParams imageSize=new LinearLayout.LayoutParams(dp(prefs.getInt("iconSize",54)),dp(prefs.getInt("iconSize",54)));imageSize.gravity=Gravity.CENTER;parent.addView(preview,imageSize);TextView value=text(prefs.getInt("iconSize",54)+" dp",14,accent);value.setGravity(Gravity.CENTER);parent.addView(value);SeekBar seek=new SeekBar(this);seek.setMax(28);seek.setProgress(prefs.getInt("iconSize",54)-36);seek.setContentDescription(getString(R.string.ui_109));parent.addView(seek,new LinearLayout.LayoutParams(-1,dp(48)));seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(SeekBar bar,int p,boolean user){int size=p+36;value.setText(size+" dp");preview.getLayoutParams().width=dp(size);preview.getLayoutParams().height=dp(size);preview.requestLayout();if(user)prefs.edit().putInt("iconSize",size).apply();}public void onStartTrackingTouch(SeekBar b){}public void onStopTrackingTouch(SeekBar b){}});}
     private void addDrawerAppearance(LinearLayout parent) {

@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.22"><img alt="Version 0.22 preview" src="https://img.shields.io/badge/v0.22-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.23"><img alt="Version 0.23 preview" src="https://img.shields.io/badge/v0.23-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
   <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
   <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
 </p>
@@ -11,7 +11,7 @@
 <p align="center">A lightweight, experimental Android launcher. Native views, a familiar Home screen, and room to make it yours.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.22">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.23">Download APK ↓</a></strong> · <a href="README.vi.md">Tiếng Việt</a> · <a href="docs/CHANGELOG.vi.md">Changelog</a> · <a href="VALIDATION.md">Testing notes</a>
 </p>
 
 ## A look inside
@@ -62,6 +62,13 @@ Actual emulator captures from development builds. See the testing notes for devi
 - One live app widget: preview, bind/configure through Android, select a page, drag, resize, remove, and preserve its position across restarts.
 - Unlock entrance animation: icons are staged behind the keyguard, then ripple outward from the screen center and settle on a light spring on the first eligible Home draw. The dock moves less and the clock settles with the icons.
 - Wallpaper colors (Material You): search, the app drawer, menus and settings follow the system palette derived from your wallpaper. Turn it off under **Settings → Home screen → Wallpaper colors** to keep the original navy colors.
+- Folders open as an icon grid that grows out of the folder. Rename in place, hold an app to drag it out, or ungroup. Holding a dragged icon over another app for a moment creates a folder.
+- Themed icons: apps that ship a monochrome icon are tinted with the wallpaper palette (**Settings → Icon packs → Themed icons**, off by default; not used with an icon pack).
+- Notification dots on apps and folders once notification access is granted.
+- Drawer search also finds app shortcuts, system settings pages, contacts (optional, needs permission) and offers a web search. Matching ignores case, accents and punctuation.
+- Hidden apps leave the drawer but stay on Home and in search. On Android 15 and later, the private space appears at the end of the drawer and locks or unlocks from its heading.
+- Gestures: swipe down on Home for notifications; optional double-tap to lock, which needs Pixel Air's accessibility service.
+- Back up and restore the Home layout, folders and settings to a JSON file. The widget is not included.
 - Dedicated settings and automatic English/Vietnamese localization.
 
 ## Status and limitations
@@ -77,7 +84,7 @@ This is an early prototype, not the official Google Pixel Launcher. It does not 
 
 ## Download
 
-[Download the 0.22 prerelease APK](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.22). This is a debug-signed test build, not a Google Play release.
+[Download the 0.23 prerelease APK](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.23). This is a debug-signed test build, not a Google Play release.
 
 ## Build
 
@@ -134,3 +141,5 @@ Version 0.17 removes the experimental Home-return feedback because of latency re
 Version 0.18.1 restores the 0.18 implementation. Only build/version metadata changes so it can install over 0.19–0.21 without clearing user data.
 
 Version 0.22 adds wallpaper colors and a shorter spring-based unlock entrance. When the entrance plays is unchanged from 0.18. The recording above shows the earlier motion.
+
+Version 0.23 adds folder panels, smoother Home editing, themed icons, notification dots, wider search, hidden apps, private space, Home gestures and layout backup. The unlock entrance is unchanged.

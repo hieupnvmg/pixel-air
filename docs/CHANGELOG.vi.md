@@ -1,3 +1,29 @@
+# Pixel Air 0.23 — Thư mục, tìm kiếm rộng hơn và các tiện ích của Pixel
+
+## Drawer và Home
+
+- Nền theo nhóm: mỗi nhóm app đang mở trong drawer có nền bo tròn riêng theo màu nhóm, họa tiết lặp và một biểu tượng lớn mờ. Tắt ở **Cài đặt → Màn hình chính → Nền theo nhóm**.
+- Chỉnh Home: thả icon lên ô có app thì đổi chỗ ngay, không còn hỏi. Giữ icon đang kéo trên một app khác khoảng 0,4 giây sẽ hiện vòng tròn và rung nhẹ; thả ra để tạo thư mục, kể cả khi kéo từ drawer. Khung ô khi chỉnh không còn bị mất trong lúc kéo.
+- Menu nhấn giữ gọn hơn và hiện tối đa 4 phím tắt của app (ví dụ Soạn thư của Gmail).
+- Thư mục mở thành bảng lưới icon nở ra từ chính thư mục. Chạm tên để đổi tên; tên được giữ khi thêm hoặc bớt app. Giữ một app để kéo ra ngoài; thư mục chỉ còn một app sẽ thành app thường. Back hoặc chạm ra ngoài để đóng.
+
+## Tính năng mới
+
+- **Icon theo chủ đề** (Cài đặt → Bộ icon, mặc định tắt): app có lớp icon đơn sắc được tô theo màu hình nền; app không có giữ icon gốc. Không áp dụng khi đang dùng gói icon.
+- **Chấm thông báo** (mặc định bật): chấm trên app và thư mục có thông báo. Cần cấp quyền truy cập thông báo một lần trong Cài đặt. Bỏ qua thông báo đang chạy liên tục, thông báo tóm tắt nhóm và kênh đã tắt huy hiệu.
+- **Tìm kiếm**: ngoài app, drawer tìm cả phím tắt của app, trang cài đặt hệ thống, danh bạ (tùy chọn, cần quyền) và một dòng tìm trên web. Gõ không dấu vẫn tìm được ("cai dat", "wifi" ra "Wi‑Fi"). Bật/tắt từng loại ở **Cài đặt → Tìm kiếm**.
+- **Ứng dụng ẩn** (Cài đặt → Danh sách ứng dụng): app bị ẩn không hiện trong drawer nhưng vẫn ở Home và vẫn tìm được.
+- **Không gian riêng tư** (Android 15 trở lên): hiện ở cuối drawer, chạm tiêu đề để khóa/mở khóa. App riêng tư chỉ mở từ drawer, không kéo ra Home.
+- **Cử chỉ**: vuốt xuống trên Home để mở thông báo (mặc định bật). Chạm hai lần vào chỗ trống để khóa màn hình (mặc định tắt; cần bật dịch vụ hỗ trợ tiếp cận "Cử chỉ Pixel Air", dịch vụ này không đọc nội dung màn hình).
+- **Sao lưu bố cục** (Cài đặt → Sao lưu): lưu trang Home, dock, thư mục, tên thư mục, icon riêng, app ẩn và cài đặt ra file JSON; khôi phục sẽ thay toàn bộ. Widget không được sao lưu vì mã widget gắn với bản cài đặt.
+
+## Lưu ý khi cài
+
+- versionCode 24. Cài PixelAir-0.23.apk đè 0.22 để giữ dữ liệu, với điều kiện APK ký cùng certificate.
+- App cài ngoài Play (sideload) trên Android 13 trở lên có thể thấy công tắc truy cập thông báo và hỗ trợ tiếp cận bị mờ. Vào **Thông tin ứng dụng → ⋮ → Cho phép chế độ cài đặt bị hạn chế** rồi bật lại.
+- Quyền mới: mở rộng thanh trạng thái, đọc danh bạ (chỉ khi bật tìm danh bạ) và truy cập hồ sơ ẩn (để thấy Không gian riêng tư).
+- Mới thử trên máy giả lập Android 17 / API 37; chưa thử trên REDMAGIC.
+
 # Pixel Air 0.22 — Màu theo hình nền và hiệu ứng mở khóa mới
 
 ## Màu theo hình nền (Material You)

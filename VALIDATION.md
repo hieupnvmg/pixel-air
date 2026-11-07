@@ -1,3 +1,17 @@
+# Kiểm tra 0.23
+
+- assembleDebug và lintDebug qua: 0 lỗi, 31 cảnh báo, bằng 0.22. 14 lớp kiểm tra model qua, thêm LayoutBackupTest (khóa nào được sao lưu) và SearchTextTest (bỏ dấu, hoa thường, dấu câu).
+- Máy giả lập Android 17 / API 37, 1080×2400, không PIN. Đã khởi động lại lạnh giữa chừng vì máy giả lập chạy lâu bị quá tải (system_server bị watchdog dừng); sau đó không lặp lại.
+- Nền theo nhóm, chỉnh Home và thư mục: đã thử ở các commit 4bbdabf, ea36cd3, fb7f227 (dọc/ngang, đổi chỗ, giữ để tạo thư mục, đổi tên, kéo app ra, tách nhóm, Back, chạm ra ngoài).
+- Icon theo chủ đề: bật thì YouTube, Gmail, Maps, Chrome, Tin nhắn… đổi sang icon đơn sắc ở Home và drawer; Camera không có lớp đơn sắc nên giữ icon gốc.
+- Chấm thông báo: cấp quyền bằng `cmd notification allow_listener`, gửi SMS giả lập; chấm hiện trên Tin nhắn ở dock và drawer. Chưa thử chấm biến mất khi xóa thông báo, chưa thử trên thư mục.
+- Vuốt xuống: mở thanh thông báo qua StatusBarManager (hidden API được cho phép trên API 37). Chạm hai lần: khi bật dịch vụ hỗ trợ tiếp cận thì màn hình tắt; chạm một lần vào ô trống vẫn mở hộp chọn app sau khoảng 0,3 giây.
+- Tìm kiếm: "c" ra app (gồm Calendar đang ẩn) và phím tắt app; "wifi" ra phím tắt Wi‑Fi và trang cài đặt Wi‑Fi, chạm mở đúng WifiSettingsActivity. Chưa thử tìm danh bạ (máy giả lập không có danh bạ).
+- Ứng dụng ẩn: Calendar không còn trong nhóm Work, vẫn tìm được.
+- Không gian riêng tư: tạo bằng `pm create-user --user-type android.os.usertype.profile.PRIVATE`; drawer hiện 20 app có huy hiệu, khóa/mở khóa từ tiêu đề, Clock mở dưới user 10. Không thử với khóa riêng của không gian riêng tư.
+- Sao lưu: tạo file JSON qua trình chọn file, không có khóa widget; đổi bố cục rồi khôi phục, Home tự tải lại với dock, icon theo chủ đề, app ẩn và cử chỉ như trong file.
+- Chưa kiểm tra: REDMAGIC thật, giao diện tiếng Việt trên máy, Android 13–14, công tắc "cài đặt bị hạn chế" với APK sideload.
+
 # Kiểm tra 0.22
 
 - assembleDebug và lintDebug qua: 0 lỗi, 31 cảnh báo, bằng số cảnh báo của 0.18.1. 12 lớp kiểm tra model qua, thêm ColorHarmonyTest và UnlockMotionTest.

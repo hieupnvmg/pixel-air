@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.22"><img alt="Version 0.22 preview" src="https://img.shields.io/badge/v0.22-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
+  <a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.23"><img alt="Version 0.23 preview" src="https://img.shields.io/badge/v0.23-Preview-bdd5ff?style=flat-square&amp;labelColor=1b2638" /></a>
   <img alt="Android 13 and newer" src="https://img.shields.io/badge/Android-13%2B-a8dab5?style=flat-square&amp;labelColor=1b2638" />
   <a href="LICENSE"><img alt="Apache License 2.0" src="https://img.shields.io/badge/License-Apache_2.0-d6c4f1?style=flat-square&amp;labelColor=1b2638" /></a>
 </p>
@@ -11,7 +11,7 @@
 <p align="center">Launcher Android gọn nhẹ, giao diện quen thuộc và nhiều tùy chọn để màn hình chính vừa ý bạn.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.22">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a> · <a href="AGENTS.md">Hướng dẫn sửa code</a>
+  <strong><a href="https://github.com/hieupnvmg/pixel-air/releases/tag/v0.23">Tải APK ↓</a></strong> · <a href="README.md">English</a> · <a href="docs/CHANGELOG.vi.md">Lịch sử thay đổi</a> · <a href="VALIDATION.md">Chi tiết kiểm tra</a> · <a href="AGENTS.md">Hướng dẫn sửa code</a>
 </p>
 
 ## Một vòng giao diện
@@ -59,11 +59,18 @@
 - Một widget: xem trước, chọn trang/vị trí, kéo đổi cỡ và xóa. Lưu widget mới sẽ thay widget hiện tại.
 - Hiệu ứng mở khóa: icon được ẩn sau màn khóa, rồi lan dần từ tâm màn hình và nảy nhẹ về vị trí khi Home bắt đầu vẽ. Dock chuyển động nhẹ hơn, đồng hồ thu nhẹ cùng icon.
 - Màu theo hình nền (Material You): thanh tìm kiếm, drawer, menu và cài đặt đổi màu theo bảng màu hệ thống lấy từ hình nền. Tắt ở **Cài đặt → Màn hình chính → Màu theo hình nền** để giữ màu navy cũ.
+- Thư mục mở thành bảng lưới icon nở ra từ chính thư mục: đổi tên tại chỗ, giữ một app để kéo ra, hoặc tách nhóm. Giữ icon đang kéo trên một app khác một chút để tạo thư mục.
+- Icon theo chủ đề: app có icon đơn sắc được tô theo màu hình nền (**Cài đặt → Bộ icon → Icon theo chủ đề**, mặc định tắt; không áp dụng khi dùng gói icon).
+- Chấm thông báo trên app và thư mục sau khi cấp quyền truy cập thông báo.
+- Tìm kiếm trong drawer tìm cả phím tắt của app, trang cài đặt hệ thống, danh bạ (tùy chọn, cần quyền) và gợi ý tìm trên web. Không phân biệt hoa thường, dấu và dấu câu.
+- Ẩn app khỏi drawer (vẫn ở Home và vẫn tìm được). Từ Android 15, Không gian riêng tư hiện ở cuối drawer, chạm tiêu đề để khóa/mở khóa.
+- Cử chỉ: vuốt xuống trên Home để mở thông báo; tùy chọn chạm hai lần để khóa (cần bật dịch vụ hỗ trợ tiếp cận của Pixel Air).
+- Sao lưu và khôi phục bố cục Home, thư mục và cài đặt ra file JSON. Không gồm widget.
 - Cài đặt riêng, tự theo ngôn ngữ hệ thống Việt/Anh.
 
 ## Tải bản thử
 
-[Tải APK 0.22 trên GitHub Releases](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.22). Đây là bản debug để thử nghiệm.
+[Tải APK 0.23 trên GitHub Releases](https://github.com/hieupnvmg/pixel-air/releases/tag/v0.23). Đây là bản debug để thử nghiệm.
 
 ## Build
 
@@ -117,3 +124,5 @@ Bản 0.17 bỏ hoàn toàn hiệu ứng trở về Home được thêm ở 0.16
 Bản 0.18.1 khôi phục code đúng 0.18. Chỉ đổi thông tin phiên bản để cài đè 0.19–0.21 mà không xóa dữ liệu.
 
 Bản 0.22 thêm màu theo hình nền và hiệu ứng mở khóa dạng lò xo ngắn hơn. Thời điểm phát hiệu ứng giữ nguyên như 0.18. Bản ghi hình ở trên là chuyển động cũ.
+
+Bản 0.23 thêm bảng thư mục, chỉnh Home mượt hơn, icon theo chủ đề, chấm thông báo, tìm kiếm rộng hơn, ẩn app, Không gian riêng tư, cử chỉ trên Home và sao lưu bố cục. Hiệu ứng mở khóa giữ nguyên.

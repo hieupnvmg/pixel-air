@@ -62,7 +62,7 @@ final class DrawerSectionView extends LinearLayout {
     }
     void bind(String key, String name, int total, boolean expandable, boolean expanded) {
         accent = accent(key); title.setText(name); title.setTextColor(accent);
-        count.setText(String.valueOf(total)); count.setTextColor(accent);
+        count.setText(total > 0 ? String.valueOf(total) : ""); count.setTextColor(accent);
         glyph.bind(key, accent); motif.bind(key, accent);
         setContentDescription(getResources().getString(R.string.drawer_section_description, name, total));
         setClickable(expandable); setFocusable(expandable);
@@ -176,6 +176,9 @@ final class DrawerSectionView extends LinearLayout {
                 canvas.drawRoundRect(3, 2, 21, 22, 2, 2, paint); canvas.drawLine(7, 7, 17, 7, paint); canvas.drawLine(7, 12, 17, 12, paint); canvas.drawLine(7, 17, 13, 17, paint); break;
             case "shopping":
                 canvas.drawRoundRect(3, 7, 21, 22, 2, 2, paint); canvas.drawArc(7, 1, 17, 13, 180, 180, false, paint); break;
+            case "private":
+                canvas.drawRoundRect(4, 10, 20, 22, 3, 3, paint); canvas.drawArc(7, 2, 17, 14, 180, 180, false, paint);
+                canvas.drawLine(7, 8, 7, 10, paint); canvas.drawLine(17, 8, 17, 10, paint); canvas.drawCircle(12, 16, 1.2f, paint); break;
             case "frequent":
                 for (int n = 0; n < 10; n++) { double angle = -Math.PI / 2 + n * Math.PI / 5; float radius = n % 2 == 0 ? 11 : 5; float x = 12 + (float)Math.cos(angle) * radius, y = 12 + (float)Math.sin(angle) * radius; if (n == 0) path.moveTo(x, y); else path.lineTo(x, y); }
                 path.close(); paint.setStyle(Paint.Style.FILL); canvas.drawPath(path, paint); break;
