@@ -163,4 +163,6 @@
     <string name="drawer_backdrop_title">Nền theo nhóm</string>
     <string name="drawer_backdrop_detail">Mỗi nhóm ứng dụng trong ngăn kéo khi mở ra có hoa văn và biểu tượng nền riêng.</string>
     <string name="home_widgets">Tiện ích</string>
+    <string name="folder_rename">Đổi tên thư mục</string>
+    <string name="folder_drag_hint">Giữ một app để kéo ra ngoài</string>
 </resources>

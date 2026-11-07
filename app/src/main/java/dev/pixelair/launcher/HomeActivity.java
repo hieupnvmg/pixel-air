@@ -1,5 +1,6 @@
 package dev.pixelair.launcher;
 
+import android.animation.*;
 import android.app.*;
 import android.app.role.RoleManager;
 import android.appwidget.*;
@@ -118,7 +119,7 @@ public class HomeActivity extends Activity {
  void reloadIconPack(boolean force){String selected=prefs.getString("iconPack","");if(!force&&selected.equals(appliedIconPack))return;appliedIconPack=selected;int generation=++iconPackGeneration;appWorker.execute(()->{IconPackManager loaded=IconPackManager.load(this,selected);handler.post(()->{if(destroyed||generation!=iconPackGeneration)return;iconPack=loaded;renderSlots();if(drawerAdapter!=null)fillDrawer(query==null?"":query.getText().toString());if(!selected.isEmpty()&&loaded==null)Toast.makeText(this,getString(R.string.ui_000),Toast.LENGTH_SHORT).show();});});}
  void seed(){String[] wanted={"instagram","youtube","cricbuzz","com.google.android.apps.youtube.music","com.android.vending","com.google.android.gm","com.google.android.apps.photos","com.google.android.apps.maps","dialer","com.android.chrome","whatsapp","camera"};HashSet<String> used=new HashSet<>();for(int n=0;n<12;n++){for(App a:apps)if(a.id.toLowerCase(Locale.ROOT).contains(wanted[n])&&!used.contains(a.id)){model.put(n<8?n:-(n-8)-1,a.id);used.add(a.id);break;}}prefs.edit().putBoolean("initialized",true).apply();save();}
  void save(){android.content.SharedPreferences.Editor e=prefs.edit();e.putInt("workspaceVersion",2).putInt("pages",model.pages.size()).putInt("currentPage",model.currentPage);for(int p=0;p<model.pages.size();p++)for(int n=0;n<20;n++)e.putString("page"+p+"cell"+n,model.pages.get(p)[n]);for(int n=0;n<4;n++)e.putString("dock"+n,model.dock[n]);e.apply();}
- App find(String id){if(id.contains("|")){android.graphics.Bitmap image=android.graphics.Bitmap.createBitmap(dp(54),dp(54),android.graphics.Bitmap.Config.ARGB_8888);Canvas c=new Canvas(image);Paint paint=new Paint(3);paint.setColor(palette.folder);c.drawCircle(dp(27),dp(27),dp(27),paint);String[] ids=id.split("\\|");for(int n=0;n<Math.min(ids.length,4);n++){App child=find(ids[n]);if(child!=null){int x=dp(9+(n%2)*20),y=dp(9+(n/2)*20);Drawable themed=displayIcon(child);Drawable d=themed.getConstantState()!=null?themed.getConstantState().newDrawable().mutate():themed;d.setBounds(x,y,x+dp(17),y+dp(17));d.draw(c);}}return new App(id,getString(R.string.ui_001),new BitmapDrawable(getResources(),image));}for(App a:apps)if(a.id.equals(id))return a;return null;}
+ App find(String id){if(id.contains("|")){android.graphics.Bitmap image=android.graphics.Bitmap.createBitmap(dp(54),dp(54),android.graphics.Bitmap.Config.ARGB_8888);Canvas c=new Canvas(image);Paint paint=new Paint(3);paint.setColor(palette.folder);c.drawCircle(dp(27),dp(27),dp(27),paint);String[] ids=id.split("\\|");for(int n=0;n<Math.min(ids.length,4);n++){App child=find(ids[n]);if(child!=null){int x=dp(9+(n%2)*20),y=dp(9+(n/2)*20);Drawable themed=displayIcon(child);Drawable d=themed.getConstantState()!=null?themed.getConstantState().newDrawable().mutate():themed;d.setBounds(x,y,x+dp(17),y+dp(17));d.draw(c);}}return new App(id,folderName(id),new BitmapDrawable(getResources(),image));}for(App a:apps)if(a.id.equals(id))return a;return null;}
  void build(){
  cancelUnlockEntrance();visibleWidgetBoard=null;editingHome=false;dismissHomePopup();if(drawerAnimator!=null)drawerAnimator.cancel();drawer=null;drawerCache=null;drawerAdapter=null;drawerList=null;drawerPager=null;drawerHorizontalArea=null;query=null;drawerProgress=0;
  root=new FrameLayout(this);drawerBars=new DrawerBarsDrawable(root);homeScrim=new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,new int[]{0x14000000,0x05000000,0x55000000});root.setBackground(new LayerDrawable(new Drawable[]{homeScrim,drawerBars}));setContentView(root);root.setOnApplyWindowInsetsListener((v,in)->{android.graphics.Insets x=in.getInsets(WindowInsets.Type.systemBars());root.setPadding(x.left,x.top,x.right,x.bottom);return in;});home=new FrameLayout(this);root.addView(home,new FrameLayout.LayoutParams(-1,-1));
@@ -166,17 +167,19 @@ public class HomeActivity extends Activity {
   if(action==DragEvent.ACTION_DRAG_ENTERED){if(target)frame.setState(HomeCellFrame.TARGET);return true;}
   if(action==DragEvent.ACTION_DRAG_LOCATION){int[] xy=new int[2];v.getLocationInWindow(xy);dragEdge(xy[0]+e.getX());if(target)updateFolderHover(v,address,frame,e.getX(),e.getY());return true;}
   if(action==DragEvent.ACTION_DRAG_EXITED){if(folderHoverFrame==frame)clearFolderHover();frame.setState(HomeCellFrame.IDLE);return true;}
-  if(action==DragEvent.ACTION_DRAG_ENDED){if(folderHoverFrame==frame)clearFolderHover();frame.setState(HomeCellFrame.IDLE);cancelEdge();restoreDragSource();return true;}
+  if(action==DragEvent.ACTION_DRAG_ENDED){if(!e.getResult())folderDragOrigin=null;if(folderHoverFrame==frame)clearFolderHover();frame.setState(HomeCellFrame.IDLE);cancelEdge();restoreDragSource();return true;}
   if(action!=DragEvent.ACTION_DROP)return true;
   boolean folder=frame.state()==HomeCellFrame.FOLDER;clearFolderHover();frame.setState(HomeCellFrame.IDLE);cancelEdge();
   if(isWidgetReserved(address)){Toast.makeText(this,getString(R.string.ui_066),Toast.LENGTH_SHORT).show();return true;}
   int source=dragSource;dragSource=Integer.MIN_VALUE;dragging=false;
   if(source==Integer.MIN_VALUE){String id=drawerDragId;if(id==null)return true;
-   if(folder){drawerDragId=null;String old=model.get(address);if(!Arrays.asList(old.split("\\|")).contains(id))model.put(address,old+"|"+id);save();renderSlots();}
+   if(folder){drawerDragId=null;String old=model.get(address);
+    if(Arrays.asList(old.split("\\|")).contains(id)){folderDragOrigin=null;return true;}
+    String merged=old+"|"+id;model.put(address,merged);moveFolderName(old,merged);finishFolderDragOut(id);save();renderSlots();}
    else addDrawerShortcut(id,address);
    return true;}
   if(source==address)return true;
-  if(folder)model.merge(source,address);else model.swap(source,address);
+  if(folder){String old=model.get(address);model.merge(source,address);moveFolderName(old,model.get(address));}else model.swap(source,address);
   save();renderSlots();return true;
  }
  void updateFolderHover(View cell,int address,HomeCellFrame frame,float x,float y){
@@ -204,7 +207,7 @@ public class HomeActivity extends Activity {
  LinearLayout appCell(App a,boolean showLabel,int color){LinearLayout box=new LinearLayout(this);box.setOrientation(LinearLayout.VERTICAL);box.setGravity(Gravity.CENTER);box.setPadding(dp(2),dp(3),dp(2),dp(3));ImageView icon=new ImageView(this);icon.setScaleType(ImageView.ScaleType.FIT_CENTER);if(a!=null){icon.setImageDrawable(displayIcon(a));icon.setContentDescription(a.label);}else{icon.setImageDrawable(bg(Color.TRANSPARENT,28));icon.setContentDescription(getString(R.string.ui_011));}box.addView(icon,new LinearLayout.LayoutParams(dp(iconSize()),dp(iconSize())));if(showLabel){TextView title=text(a==null?"":a.label,12,color);title.setSingleLine();title.setEllipsize(TextUtils.TruncateAt.END);title.setPadding(0,dp(5),0,0);box.addView(title,new LinearLayout.LayoutParams(-1,dp(25)));}box.setContentDescription(a==null?getString(R.string.ui_012):a.label);return box;}
  void pickSlot(int address){if(isWidgetReserved(address))return;App selected=find(model.get(address));if(selected==null){chooseAppGrid(getString(R.string.ui_013),a->{model.put(address,a.id);save();renderSlots();},null);return;}new AlertDialog.Builder(this).setTitle(selected.label).setItems(new String[]{getString(R.string.ui_014),getString(R.string.ui_015),getString(R.string.ui_016),getString(R.string.ui_017)},(d,n)->{if(n==0)chooseAppGrid(getString(R.string.ui_018)+selected.label,a->{prefs.edit().putString("customIcon:"+selected.id,a.id).apply();renderSlots();if(drawerAdapter!=null)drawerAdapter.notifyDataSetChanged();},()->{prefs.edit().remove("customIcon:"+selected.id).apply();renderSlots();if(drawerAdapter!=null)drawerAdapter.notifyDataSetChanged();});if(n==1)chooseAppGrid(getString(R.string.ui_015),a->{model.put(address,a.id);save();renderSlots();},null);if(n==2)chooseCategory(selected);if(n==3){model.put(address,"");save();renderSlots();}}).show();}
  void launch(App a){launch(a,null);}
- void launch(App a,View source){if(a.id.contains("|")){ArrayList<App> children=new ArrayList<>();for(String id:a.id.split("\\|")){App child=find(id);if(child!=null)children.add(child);}String[] names=new String[children.size()];for(int n=0;n<names.length;n++)names[n]=children.get(n).label;new AlertDialog.Builder(this).setTitle(getString(R.string.ui_001)).setItems(names,(d,w)->launch(children.get(w))).setNeutralButton(getString(R.string.ui_019),(d,w)->{ArrayList<Integer> empty=new ArrayList<>();int folder=Integer.MIN_VALUE;for(int page=0;page<model.pages.size();page++)for(int cell=0;cell<model.capacity(page);cell++){int address=page*20+cell;if(model.get(address).equals(a.id)&&folder==Integer.MIN_VALUE)folder=address;else if(model.get(address).isEmpty()&&!isWidgetReserved(address))empty.add(address);}for(int cell=0;cell<4;cell++){int address=-cell-1;if(model.get(address).equals(a.id)&&folder==Integer.MIN_VALUE)folder=address;else if(model.get(address).isEmpty()&&!isWidgetReserved(address))empty.add(address);}if(folder==Integer.MIN_VALUE)return;empty.add(0,folder);if(children.size()>empty.size()){Toast.makeText(this,getString(R.string.ui_020),Toast.LENGTH_SHORT).show();return;}model.put(folder,"");for(int n=0;n<children.size();n++)model.put(empty.get(n),children.get(n).id);save();renderSlots();}).show();return;}try{Intent i=new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setComponent(ComponentName.unflattenFromString(a.id)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);Rect bounds=new Rect();View icon=source instanceof LinearLayout&&((LinearLayout)source).getChildCount()>0?((LinearLayout)source).getChildAt(0):source;if(icon!=null&&icon.getGlobalVisibleRect(bounds))i.setSourceBounds(bounds);closeDrawerImmediately();startActivity(i);a.opens=Math.min(Long.MAX_VALUE-1,a.opens)+1;prefs.edit().putLong("opens:"+a.id,a.opens).apply();orderDirty=true;}catch(Exception e){Toast.makeText(this,getString(R.string.ui_021),Toast.LENGTH_SHORT).show();}}
+ void launch(App a,View source){if(a.id.contains("|")){openFolder(a,source);return;}try{Intent i=new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setComponent(ComponentName.unflattenFromString(a.id)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);Rect bounds=new Rect();View icon=source instanceof LinearLayout&&((LinearLayout)source).getChildCount()>0?((LinearLayout)source).getChildAt(0):source;if(icon!=null&&icon.getGlobalVisibleRect(bounds))i.setSourceBounds(bounds);closeDrawerImmediately();startActivity(i);a.opens=Math.min(Long.MAX_VALUE-1,a.opens)+1;prefs.edit().putLong("opens:"+a.id,a.opens).apply();orderDirty=true;}catch(Exception e){Toast.makeText(this,getString(R.string.ui_021),Toast.LENGTH_SHORT).show();}}
  void safe(Intent i){try{startActivity(i);}catch(Exception e){Toast.makeText(this,getString(R.string.ui_022),Toast.LENGTH_SHORT).show();}}
  void calendar(){safe(new Intent(Intent.ACTION_VIEW,Uri.parse("content://com.android.calendar/time/"+System.currentTimeMillis())));}
  void webSearch(){safe(new Intent(Intent.ACTION_WEB_SEARCH).putExtra(SearchManager.QUERY,""));}
@@ -297,13 +300,99 @@ public class HomeActivity extends Activity {
    }
   });
  }
+ void ungroupFolder(App a){ArrayList<App> children=folderChildren(a.id);ArrayList<Integer> empty=new ArrayList<>();int folder=Integer.MIN_VALUE;for(int page=0;page<model.pages.size();page++)for(int cell=0;cell<model.capacity(page);cell++){int address=page*20+cell;if(model.get(address).equals(a.id)&&folder==Integer.MIN_VALUE)folder=address;else if(model.get(address).isEmpty()&&!isWidgetReserved(address))empty.add(address);}for(int cell=0;cell<4;cell++){int address=-cell-1;if(model.get(address).equals(a.id)&&folder==Integer.MIN_VALUE)folder=address;else if(model.get(address).isEmpty()&&!isWidgetReserved(address))empty.add(address);}if(folder==Integer.MIN_VALUE)return;empty.add(0,folder);if(children.size()>empty.size()){Toast.makeText(this,getString(R.string.ui_020),Toast.LENGTH_SHORT).show();return;}model.put(folder,"");for(int n=0;n<children.size();n++)model.put(empty.get(n),children.get(n).id);moveFolderName(a.id,null);save();renderSlots();}
+ ArrayList<App> folderChildren(String id){ArrayList<App> children=new ArrayList<>();for(String child:id.split("\\|")){App app=find(child);if(app!=null)children.add(app);}return children;}
+ String folderName(String id){return prefs.getString("folderName:"+id,getString(R.string.ui_001));}
+ /** Folder names are keyed by the folder's id, which changes with its content; carry the name over (or drop it). */
+ void moveFolderName(String from,String to){if(from==null||!from.contains("|"))return;String name=prefs.getString("folderName:"+from,null);if(name==null)return;SharedPreferences.Editor edit=prefs.edit().remove("folderName:"+from);if(to!=null&&to.contains("|"))edit.putString("folderName:"+to,name);edit.apply();}
+ int addressOf(String id){for(int page=0;page<model.pages.size();page++)for(int cell=0;cell<model.capacity(page);cell++)if(model.get(page*20+cell).equals(id))return page*20+cell;for(int cell=0;cell<4;cell++)if(model.get(-cell-1).equals(id))return -cell-1;return Integer.MIN_VALUE;}
+ /** An app dragged out of an open folder leaves it once it lands; a folder left with one app becomes that app. */
+ String folderDragOrigin;
+ void finishFolderDragOut(String childId){String origin=folderDragOrigin;folderDragOrigin=null;if(origin==null)return;int address=addressOf(origin);if(address==Integer.MIN_VALUE)return;
+  ArrayList<String> ids=new ArrayList<>(Arrays.asList(origin.split("\\|")));if(!ids.remove(childId))return;
+  String next=ids.isEmpty()?"":String.join("|",ids);model.put(address,next);moveFolderName(origin,next);}
+ FrameLayout folderLayer;LinearLayout folderPanel;View folderSource;String folderId;android.window.OnBackInvokedCallback folderBack;
+ void openFolder(App folder,View source){
+  closeFolder(false);dismissHomePopup();String id=folder.id;ArrayList<App> children=folderChildren(id);
+  FrameLayout layer=new FrameLayout(this);layer.setBackgroundColor(0x55000000);layer.setOnClickListener(v->closeFolder(true));
+  LinearLayout panel=new LinearLayout(this);panel.setOrientation(LinearLayout.VERTICAL);panel.setPadding(dp(14),dp(14),dp(14),dp(8));
+  panel.setBackground(bg(palette.field,28));panel.setElevation(dp(16));panel.setClickable(true);panel.setAccessibilityPaneTitle(folder.label);
+  EditText title=new EditText(this);title.setText(folder.label);title.setHint(getString(R.string.ui_001));title.setSingleLine();title.setTextSize(20);title.setTextColor(palette.text);title.setHintTextColor(palette.hint);
+  title.setGravity(Gravity.CENTER);title.setBackground(null);title.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_DONE);title.setSelectAllOnFocus(true);title.setContentDescription(getString(R.string.folder_rename));
+  // Move focus to the panel rather than clearFocus(): that would hand focus to the first focusable view, the hidden drawer search field.
+  title.setOnEditorActionListener((v,action,event)->{panel.requestFocus();getWindow().getInsetsController().hide(WindowInsets.Type.ime());return true;});
+  title.setOnFocusChangeListener((v,focused)->{if(!focused)renameFolder(id,title.getText().toString());});
+  panel.addView(title,new LinearLayout.LayoutParams(-1,dp(52)));
+  int columns=children.size()<=4?Math.max(2,children.size()):children.size()<=9?3:4,cellWidth=dp(Math.max(76,iconSize()+22)),cellHeight=dp(iconSize()+40);
+  for(int start=0;start<children.size();start+=columns){LinearLayout row=new LinearLayout(this);
+   for(int col=0;col<columns;col++){int index=start+col;if(index>=children.size()){row.addView(new View(this),new LinearLayout.LayoutParams(cellWidth,cellHeight));continue;}
+    App app=children.get(index);LinearLayout cell=appCell(app,true,palette.text);
+    cell.setBackground(new RippleDrawable(android.content.res.ColorStateList.valueOf(0x22FFFFFF),null,bg(Color.WHITE,18)));
+    cell.setOnClickListener(v->{launch(app,v);closeFolder(false);});
+    cell.setOnLongClickListener(v->{iconLongPressed=true;drawerDragId=app.id;dragSource=Integer.MIN_VALUE;dragging=true;folderDragOrigin=id;
+     if(v.startDragAndDrop(ClipData.newPlainText("app",app.id),new View.DragShadowBuilder(v),app.id,0))closeFolder(false);else{drawerDragId=null;dragging=false;folderDragOrigin=null;}return true;});
+    row.addView(cell,new LinearLayout.LayoutParams(cellWidth,cellHeight));}
+   panel.addView(row,new LinearLayout.LayoutParams(-2,-2));}
+  TextView hint=text(getString(R.string.folder_drag_hint),11,palette.hint);hint.setPadding(dp(8),dp(6),dp(8),0);panel.addView(hint,new LinearLayout.LayoutParams(-1,-2));
+  TextView ungroup=text(getString(R.string.ui_019),14,palette.action);ungroup.setGravity(Gravity.CENTER);
+  ungroup.setBackground(new RippleDrawable(android.content.res.ColorStateList.valueOf(0x22FFFFFF),null,bg(Color.WHITE,18)));
+  ungroup.setOnClickListener(v->{closeFolder(false);ungroupFolder(folder);});panel.addView(ungroup,new LinearLayout.LayoutParams(-1,dp(44)));
+  panel.measure(View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));
+  int width=Math.min(root.getWidth()-dp(32),Math.max(dp(240),panel.getMeasuredWidth())),height=panel.getMeasuredHeight();
+  int[] sourceXY=new int[2],rootXY=new int[2];root.getLocationOnScreen(rootXY);float cx=root.getWidth()/2f,cy=root.getHeight()/2f;
+  if(source!=null&&source.isAttachedToWindow()){source.getLocationOnScreen(sourceXY);cx=sourceXY[0]-rootXY[0]+source.getWidth()/2f;cy=sourceXY[1]-rootXY[1]+source.getHeight()/2f;}
+  FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(width,-2);
+  lp.leftMargin=Math.round((root.getWidth()-width)/2f);
+  // Sit just above the folder when there is room, so it grows out of the icon; otherwise centre on screen.
+  int top=Math.round(cy-height-dp(12));if(top<root.getPaddingTop()+dp(24))top=Math.round((root.getHeight()-height)/2f);
+  lp.topMargin=Math.max(root.getPaddingTop()+dp(16),Math.min(root.getHeight()-root.getPaddingBottom()-height-dp(16),top));
+  // On the decor view (root clips to its system-bar padding), so the scrim also covers the status and navigation bars.
+  layer.addView(panel,lp);((ViewGroup)getWindow().getDecorView()).addView(layer,new FrameLayout.LayoutParams(-1,-1));
+  panel.setFocusableInTouchMode(true);panel.requestFocus(); // keep the name field from grabbing focus and the keyboard
+  folderLayer=layer;folderPanel=panel;folderSource=source;folderId=id;
+  home.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+  folderBack=()->closeFolder(true);getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,folderBack);
+  panel.setPivotX(cx-lp.leftMargin);panel.setPivotY(cy-lp.topMargin);
+  if(android.animation.ValueAnimator.areAnimatorsEnabled()){
+   layer.setAlpha(0);layer.animate().alpha(1).setDuration(160).start();
+   panel.setScaleX(.25f);panel.setScaleY(.25f);panel.setAlpha(0);
+   // Opaque early, then keep growing: a long fade lets the Home icons show through the panel.
+   ObjectAnimator fade=ObjectAnimator.ofFloat(panel,View.ALPHA,1);fade.setDuration(90);
+   ObjectAnimator grow=ObjectAnimator.ofPropertyValuesHolder(panel,PropertyValuesHolder.ofFloat(View.SCALE_X,1),PropertyValuesHolder.ofFloat(View.SCALE_Y,1));grow.setDuration(280);grow.setInterpolator(new android.view.animation.PathInterpolator(.2f,0f,0f,1f));
+   AnimatorSet open=new AnimatorSet();open.playTogether(fade,grow);open.start();
+  }
+  if(source!=null)source.animate().alpha(0).setDuration(120).start();
+ }
+ void renameFolder(String id,String name){String trimmed=name.trim();String current=prefs.getString("folderName:"+id,null);
+  if(trimmed.isEmpty()||trimmed.equals(getString(R.string.ui_001))){if(current==null)return;prefs.edit().remove("folderName:"+id).apply();}
+  else{if(trimmed.equals(current))return;prefs.edit().putString("folderName:"+id,trimmed).apply();}
+  renderSlots();}
+ void closeFolder(boolean animate){
+  if(folderLayer==null)return;FrameLayout layer=folderLayer;LinearLayout panel=folderPanel;View source=folderSource;String folderId=this.folderId;
+  folderLayer=null;folderPanel=null;folderSource=null;folderId=null;
+  if(folderBack!=null){getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(folderBack);folderBack=null;}
+  View focused=panel.findFocus();if(focused!=null){if(focused instanceof EditText)renameFolder(folderId,((EditText)focused).getText().toString());
+   // Park focus on Home (not the hidden drawer search) without the default focus outline it would draw after key input.
+   home.setDefaultFocusHighlightEnabled(false);home.requestFocus();getWindow().getInsetsController().hide(WindowInsets.Type.ime());}
+  if(drawer==null&&homePopup==null)home.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);
+  boolean[] done={false};
+  Runnable finish=()->{if(done[0])return;done[0]=true;if(layer.getParent() instanceof ViewGroup)((ViewGroup)layer.getParent()).removeView(layer);View decor=getWindow().getDecorView();decor.invalidate();decor.postInvalidateOnAnimation();root.invalidate();if(source!=null){source.animate().cancel();source.setAlpha(1);}};
+  if(!animate||!android.animation.ValueAnimator.areAnimatorsEnabled()){finish.run();return;}
+  layer.setClickable(false);
+  if(source!=null)source.animate().alpha(1).setStartDelay(90).setDuration(120).start();
+  // An AnimatorSet reports onAnimationEnd after a cancel too, so the scrim layer is always removed.
+  ObjectAnimator shrink=ObjectAnimator.ofPropertyValuesHolder(panel,PropertyValuesHolder.ofFloat(View.SCALE_X,.25f),PropertyValuesHolder.ofFloat(View.SCALE_Y,.25f),PropertyValuesHolder.ofFloat(View.ALPHA,0));
+  shrink.setInterpolator(new android.view.animation.PathInterpolator(.3f,0f,.8f,.15f));
+  AnimatorSet close=new AnimatorSet();close.setDuration(200);close.playTogether(shrink,ObjectAnimator.ofFloat(layer,View.ALPHA,0));
+  close.addListener(new AnimatorListenerAdapter(){@Override public void onAnimationEnd(Animator animation){finish.run();}});close.start();
+ }
  void appMenu(App a){new AlertDialog.Builder(this).setTitle(a.label).setItems(new String[]{getString(R.string.ui_037),getString(R.string.ui_038),getString(R.string.ui_039)},(d,w)->{if(w==0){closeDrawerImmediately();model.currentPage=addAppRespectWidgets(a.id);save();renderSlots();}if(w==1)safe(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:"+ComponentName.unflattenFromString(a.id).getPackageName())));if(w==2)safe(new Intent(Intent.ACTION_DELETE,Uri.parse("package:"+ComponentName.unflattenFromString(a.id).getPackageName())));}).show();}
  int[] visibleAddresses(){int count=model.capacity(model.currentPage);int[] addresses=new int[count+4];for(int n=0;n<count;n++)addresses[n]=model.currentPage*20+n;for(int n=0;n<4;n++)addresses[count+n]=-n-1;return addresses;}
  String[] slotNames(){int[] addresses=visibleAddresses();String[] names=new String[addresses.length];for(int n=0;n<names.length;n++){App a=find(model.get(addresses[n]));names[n]=(addresses[n]<0?"Dock · "+(-addresses[n]):getString(R.string.ui_040)+(n/4+1)+" · "+(n%4+1))+" · "+(a==null?getString(R.string.ui_041):a.label);}return names;}
  void closeDrawer(){if(drawer==null)return;((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(drawer.getWindowToken(),0);settleDrawer(false);}
  void closeDrawerImmediately(){if(drawerAnimator!=null){drawerAnimator.cancel();drawerAnimator=null;}if(drawer!=null){((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(drawer.getWindowToken(),0);drawer.setVisibility(View.INVISIBLE);drawer.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);drawer.setTranslationY(0);drawer=null;if(query!=null)query.setText("");if(drawerList!=null){drawerList.smoothScrollBy(0,0);drawerList.setSelection(0);requestedCategoryChip=null;selectCategoryChip("all",false);if(drawerPager!=null){drawerPage=0;drawerPager.refresh(0);updateDrawerPageLabel();}}drawerProgress=0;if(homeScrim!=null)homeScrim.setAlpha(255);applyWindowBlur(0);if(drawerBars!=null)drawerBars.setAmount(drawerOpacity,drawerProgress);home.setAlpha(1);home.setTranslationY(0);home.setScaleX(1);home.setScaleY(1);home.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);home.requestFocus();}}
  void startDrawerDrag(View source,App app){if(app==null)return;drawerDragId=app.id;dragSource=Integer.MIN_VALUE;dragging=true;iconLongPressed=true;if(source.startDragAndDrop(ClipData.newPlainText("app",app.id),new View.DragShadowBuilder(source),app.id,0))closeDrawerImmediately();else{drawerDragId=null;dragging=false;}}
- void addDrawerShortcut(String id,int address){drawerDragId=null;if(address!=Integer.MIN_VALUE&&!isWidgetReserved(address)&&model.get(address).isEmpty())model.put(address,id);else model.currentPage=addAppRespectWidgets(id);save();renderSlots();}
+ void addDrawerShortcut(String id,int address){drawerDragId=null;if(address!=Integer.MIN_VALUE&&!isWidgetReserved(address)&&model.get(address).isEmpty())model.put(address,id);else model.currentPage=addAppRespectWidgets(id);finishFolderDragOut(id);save();renderSlots();}
  void showWorkspacePopup(float x,float y){dismissHomePopup();
   LinearLayout menu=popupMenu(getString(R.string.ui_042));
   popupRow(menu,getString(R.string.ui_043),null,palette.text,()->setEditing(true));
@@ -354,7 +443,7 @@ public class HomeActivity extends Activity {
    popupRow(menu,getString(R.string.ui_047),null,palette.text,()->pickSlot(address));
    popupRow(menu,getString(R.string.ui_038),null,palette.text,()->safe(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:"+ComponentName.unflattenFromString(app.id).getPackageName()))));
   }
-  popupRow(menu,getString(folder?R.string.ui_046:R.string.ui_017),null,palette.action,()->{model.put(address,"");save();renderSlots();});
+  popupRow(menu,getString(folder?R.string.ui_046:R.string.ui_017),null,palette.action,()->{if(folder)moveFolderName(app.id,null);model.put(address,"");save();renderSlots();});
   TextView hint=text(getString(R.string.ui_048),11,palette.hint);menu.addView(hint,new LinearLayout.LayoutParams(-1,dp(28)));
   int width=dp(248);menu.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));
   int[] xy=new int[2],rootXY=new int[2];anchor.getLocationOnScreen(xy);root.getLocationOnScreen(rootXY);
@@ -407,7 +496,7 @@ public class HomeActivity extends Activity {
  boolean unlockHomeReady(){return !destroyed&&homeResumed&&hasWindowFocus()&&root!=null&&getSystemService(PowerManager.class).isInteractive()&&!getSystemService(KeyguardManager.class).isKeyguardLocked();}
  void tryUnlockEntrance(){if(!unlockHomeReady())return;if(unlockPreDraw!=null)return;if(unlockGate.isArmed())unlockGate.unlocked(SystemClock.elapsedRealtime());if(!unlockGate.hasPending(SystemClock.elapsedRealtime())){if(unlockAnimator.isPrepared())cancelUnlockEntrance();return;}prepareUnlockEntrance();if(!unlockAnimator.isPrepared())return;unlockPreDrawRoot=root;unlockPreDraw=()->{removeUnlockPreDraw();if(unlockHomeReady()&&drawer==null&&!editingHome&&unlockGate.take(SystemClock.elapsedRealtime(),true)){unlockAnimator.startPrepared(root,clock!=null&&clock.getParent() instanceof View?(View)clock.getParent():null);android.util.Log.d("PixelAirUnlock","Home entrance staged before first draw");}else if(unlockHomeReady()&&!unlockGate.hasPending(SystemClock.elapsedRealtime()))cancelUnlockEntrance();return true;};root.getViewTreeObserver().addOnPreDrawListener(unlockPreDraw);root.invalidate();}
  @Override public void onWindowFocusChanged(boolean focused){super.onWindowFocusChanged(focused);if(focused){tryUnlockEntrance();handler.postDelayed(()->{if(!destroyed)tryUnlockEntrance();},120);}}
- @Override protected void onPause(){if(getSystemService(KeyguardManager.class).isKeyguardLocked()||!getSystemService(PowerManager.class).isInteractive()){unlockGate.homeBehindKeyguard();removeUnlockPreDraw();prepareUnlockEntrance();}else{unlockGate.leaveHome();cancelUnlockEntrance();}homeResumed=false;super.onPause();}
+ @Override protected void onPause(){closeFolder(false);if(getSystemService(KeyguardManager.class).isKeyguardLocked()||!getSystemService(PowerManager.class).isInteractive()){unlockGate.homeBehindKeyguard();removeUnlockPreDraw();prepareUnlockEntrance();}else{unlockGate.leaveHome();cancelUnlockEntrance();}homeResumed=false;super.onPause();}
  void finishWidget(int id,boolean configure){AppWidgetProviderInfo info=widgetManager.getAppWidgetInfo(id);if(info==null){widgetHost.deleteAppWidgetId(id);pendingWidget=-1;return;}if(configure&&info.configure!=null){try{widgetHost.startAppWidgetConfigureActivityForResult(this,id,0,21,null);}catch(Exception e){widgetHost.deleteAppWidgetId(id);pendingWidget=-1;Toast.makeText(this,getString(R.string.ui_067),Toast.LENGTH_SHORT).show();}return;}pendingWidget=-1;startWidgetPlacement(id);}
  @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==40){applyLauncherPreferences();if(result==RESULT_OK&&data!=null)settingsAction(data.getStringExtra("action"));return;}if(req!=22&&req!=21)return;int id=data!=null?data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,pendingWidget):pendingWidget;if(result!=RESULT_OK){if(id!=-1)widgetHost.deleteAppWidgetId(id);pendingWidget=-1;return;}finishWidget(id,req==22);}
  @Override protected void onSaveInstanceState(Bundle b){super.onSaveInstanceState(b);b.putInt("pendingWidget",pendingWidget);}

@@ -163,4 +163,6 @@
     <string name="drawer_backdrop_title">Category backgrounds</string>
     <string name="drawer_backdrop_detail">Give each expanded app group in the drawer its own soft pattern and symbol.</string>
     <string name="home_widgets">Widgets</string>
+    <string name="folder_rename">Rename folder</string>
+    <string name="folder_drag_hint">Hold an app to drag it out</string>
 </resources>
